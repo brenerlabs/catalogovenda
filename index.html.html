@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club da Bola - Catálogo Executivo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #1a1a1a; --accent: #25d366; --gray-light: #f8f9fa; --text-main: #333; --text-muted: #6c757d; --gold: #d4af37; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: var(--text-main); line-height: 1.5; }
+        
+        /* HEADER EXECUTIVO */
+        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 1000; }
+        .brand-container { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .brand-container img { height: 32px; width: auto; }
+        .brand-container h1 { margin: 0; font-family: 'Oswald', sans-serif; font-size: 1.25rem; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        .nav-tools { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+        .search-box input { width: 100%; padding: 10px 15px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem; }
+
+        /* FAQ SUPERIOR */
+        .faq-top { background: var(--gray-light); padding: 10px 20px; border-bottom: 1px solid #eee; }
+        .faq-trigger { font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; gap: 5px; }
+        .faq-content { display: none; padding: 15px 0; }
+        .faq-content.active { display: block; }
+        .faq-card { background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #eee; margin-bottom: 8px; font-size: 0.8rem; }
+
+        /* BARRA DE FRETE GRÁTIS */
+        #shippingPromo { background: #fff; padding: 15px 20px; border-bottom: 1px solid #eee; display: none; }
+        #shippingPromo.active { display: block; }
+        .promo-text { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; text-align: center; }
+        .progress-container { background: #eee; height: 8px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: 0.5s ease; }
+        .progress-bar.complete { background: var(--accent); }
+
+        /* FILTROS E PRODUTOS */
+        .filter-wrapper { padding: 10px 20px; display: flex; gap: 8px; overflow-x: auto; background: #fff; border-bottom: 1px solid #eee; scrollbar-width: none; }
+        .filter-chip { background: #fff; border: 1px solid #ddd; padding: 6px 14px; border-radius: 4px; white-space: nowrap; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
+        .filter-chip.active { background: var(--primary); color: #fff; }
+
+        .section-title { font-family: 'Oswald', sans-serif; font-size: 1rem; padding: 20px 20px 10px; text-transform: uppercase; }
+        .product-card { width: 170px; padding-bottom: 15px; cursor: pointer; }
+        .img-box { width: 100%; aspect-ratio: 1/1; background: #fdfdfd; border-radius: 4px; border: 1px solid #f0f0f0; overflow: hidden; margin-bottom: 10px; }
+        .img-box img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .p-old-price { font-size: 0.75rem; color: #b0b0b0; text-decoration: line-through; }
+        .p-price { font-size: 0.95rem; font-weight: 600; color: var(--primary); }
+
+        /* MODAL E CARRINHO */
+        #productModal { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
+        #productModal.active { right: 0; }
+        .size-btn { border: 1px solid #ddd; padding: 10px; border-radius: 4px; text-align: center; cursor: pointer; }
+        .size-btn.selected { background: var(--primary); color: #fff; }
+
+        #cartFloat { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1500; display: none; }
+        #cartFloat.active { display: flex; }
+        #loader { padding: 80px 0; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <img src="logo1.png" alt="Logo">
+            <h1>Club da Bola</h1>
+        </div>
+        <div class="nav-tools">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar time..." onkeyup="applyFilters()">
+            </div>
+            <select id="modelFilter" onchange="applyFilters()" style="padding:10px; border-radius:6px; border:1px solid #ddd;">
+                <option value="todos">Todos</option>
+                <option value="torcedor">Torcedor</option>
+                <option value="jogador">Jogador</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="faq-top">
+        <div class="faq-trigger" onclick="document.getElementById('faqContent').classList.toggle('active')">
+            <span>ℹ️</span> INFORMAÇÕES IMPORTANTES
+        </div>
+        <div class="faq-content" id="faqContent">
+            <div class="faq-card"><b>Qualidade Premium:</b> Tailandesa 1:1 original.</div>
+            <div class="faq-card"><b>Frete Grátis:</b> Ganhe frete grátis em pedidos de 5 ou mais peças.</div>
+        </div>
+    </div>
+
+    <div id="shippingPromo">
+        <div class="promo-text" id="promoText">Adicione mais 5 peças para Frete Grátis!</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="filter-wrapper" id="groupFilters"></div>
+    <div id="loader">Carregando catálogo...</div>
+    <main id="catalog"></main>
+
+    <div id="productModal">
+        <div style="padding:18px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-weight:600;">DETALHES</span>
+            <button onclick="closeModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        <div id="modalBody" style="flex:1; overflow-y:auto; padding:20px;"></div>
+        <div style="padding:20px; border-top:1px solid #eee;">
+            <button id="btnAddCart" style="width:100%; padding:14px; border-radius:6px; border:none; font-weight:600; background:#f0f0f0; color:#aaa;" disabled>SELECIONE O TAMANHO</button>
+        </div>
+    </div>
+
+    <a href="#" id="cartFloat" onclick="finishOrder()">🛒 FINALIZAR PEDIDO (<span id="cartCount">0</span>)</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const GITHUB_USER = 'brenerlabs';
+        const GITHUB_REPO = 'catalogovenda';
+        const FRETE_GRATIS_MIN = 5;
+        
+        let db = []; 
+        let carrinho = [];
+        let activeGroup = 'todos';
+
+        async function fetchJson(url) {
+            const res = await fetch(url);
+            return res.json();
+        }
+
+        async function autoScan() {
+            try {
+                const categorias = await fetchJson(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/`);
+                for (let cat of categorias) {
+                    if (cat.type !== 'dir' || cat.name.startsWith('.')) continue;
+                    const anos = await fetchJson(cat.url);
+                    for (let ano of anos) {
+                        if (ano.type !== 'dir') continue;
+                        const times = await fetchJson(ano.url);
+                        for (let time of times) {
+                            if (time.type !== 'dir') continue;
+                            const modelos = await fetchJson(time.url);
+                            for (let mod of modelos) {
+                                if (mod.type !== 'dir') continue;
+                                const isJogador = mod.name.toLowerCase().includes('jogador');
+                                db.push({
+                                    id: Math.random().toString(36).substr(2, 9),
+                                    grupo: cat.name,
+                                    ano: ano.name,
+                                    nome: time.name,
+                                    modelo: isJogador ? 'jogador' : 'torcedor',
+                                    pasta: mod.path,
+                                    preco: isJogador ? 189 : 169,
+                                    precoOld: isJogador ? 249 : 219
+                                });
+                            }
+                        }
+                    }
+                }
+                renderSite();
+            } catch (err) { console.error(err); }
+        }
+
+        function renderSite() {
+            document.getElementById('loader').style.display = 'none';
+            const catalog = document.getElementById('catalog');
+            const filters = document.getElementById('groupFilters');
+            const uniqueGroups = [...new Set(db.map(p => p.grupo))];
+            
+            filters.innerHTML = `<button class="filter-chip active" onclick="setGroup('todos', this)">Todos</button>`;
+            uniqueGroups.forEach(g => {
+                filters.innerHTML += `<button class="filter-chip" onclick="setGroup('${g}', this)">${g}</button>`;
+                const sectionId = g.replace(/\s+/g, '');
+                catalog.innerHTML += `
+                    <section class="category-section" id="sec-${sectionId}">
+                        <div class="section-title">${g}</div>
+                        <div class="swiper swiper-${sectionId}"><div class="swiper-wrapper" id="grid-${sectionId}"></div></div>
+                    </section>`;
+                const grid = document.getElementById(`grid-${sectionId}`);
+                db.filter(p => p.grupo === g).forEach(p => {
+                    grid.innerHTML += `
+                        <div class="swiper-slide product-card" onclick="openModal('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.modelo}" data-grupo="${p.grupo}">
+                            <div class="img-box"><img src="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${p.pasta}/foto1.png"></div>
+                            <div style="font-weight:600; font-size:0.85rem; text-transform:uppercase;">${p.nome} ${p.ano}</div>
+                            <div class="p-old-price">R$ ${p.precoOld},00</div>
+                            <div class="p-price">R$ ${p.preco},00</div>
+                        </div>`;
+                });
+            });
+            document.querySelectorAll('.swiper').forEach(s => new Swiper(s, { slidesPerView: 'auto', spaceBetween: 15, freeMode: true }));
+        }
+
+        function updateShippingBar() {
+            const count = carrinho.length;
+            const promo = document.getElementById('shippingPromo');
+            const bar = document.getElementById('progressBar');
+            const text = document.getElementById('promoText');
+
+            if(count > 0) {
+                promo.classList.add('active');
+                const percent = Math.min((count / FRETE_GRATIS_MIN) * 100, 100);
+                bar.style.width = percent + '%';
+                
+                if(count < FRETE_GRATIS_MIN) {
+                    const faltam = FRETE_GRATIS_MIN - count;
+                    text.innerHTML = `Faltam apenas <b>${faltam}</b> ${faltam === 1 ? 'peça' : 'peças'} para ganhar <b>Frete Grátis!</b>`;
+                    bar.classList.remove('complete');
+                } else {
+                    text.innerHTML = `🎉 Parabéns! Você ganhou <b>FRETE GRÁTIS!</b>`;
+                    bar.classList.add('complete');
+                }
+            } else {
+                promo.classList.remove('active');
+            }
+        }
+
+        function openModal(id) {
+            const p = db.find(x => x.id === id);
+            selectedProduct = p;
+            document.getElementById('modalBody').innerHTML = `
+                <img src="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${p.pasta}/foto1.png" style="width:100%; border-radius:4px; margin-bottom:15px;">
+                <div style="font-family:'Oswald'; font-size:1.2rem;">CAMISA ${p.nome.toUpperCase()}</div>
+                <div style="color:var(--accent); font-weight:bold; font-size:1.4rem;">R$ ${p.preco},00</div>
+                <div style="margin: 15px 0 10px; font-weight:600; font-size:0.8rem;">TAMANHO:</div>
+                <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;">
+                    ${['P','M','G','GG','EXG'].map(s => `<div class="size-btn" onclick="selectSize(this, '${s}')">${s}</div>`).join('')}
+                </div>`;
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function selectSize(btn, s) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const addBtn = document.getElementById('btnAddCart');
+            addBtn.disabled = false;
+            addBtn.style.background = 'var(--primary)';
+            addBtn.style.color = '#fff';
+            addBtn.innerText = `ADICIONAR (${s})`;
+            addBtn.onclick = () => {
+                carrinho.push({...selectedProduct, tamanho: s});
+                document.getElementById('cartFloat').classList.add('active');
+                document.getElementById('cartCount').innerText = carrinho.length;
+                updateShippingBar();
+                closeModal();
+            };
+        }
+
+        function finishOrder() {
+            let msg = "Olá Club da Bola! Gostaria de fazer este pedido:\n\n";
+            carrinho.forEach(i => msg += `• ${i.nome} (${i.modelo}) - Tam: ${i.tamanho}\n`);
+            if(carrinho.length >= FRETE_GRATIS_MIN) msg += "\n✅ Benefício: FRETE GRÁTIS ATIVADO";
+            window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
+        }
+
+        function applyFilters() {
+            const s = document.getElementById('searchInput').value.toLowerCase();
+            const m = document.getElementById('modelFilter').value;
+            document.querySelectorAll('.product-card').forEach(c => {
+                c.style.display = (c.dataset.nome.includes(s) && (m==='todos' || c.dataset.mod===m) && (activeGroup==='todos' || c.dataset.grupo===activeGroup)) ? 'block' : 'none';
+            });
+        }
+
+        function setGroup(g, btn) {
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeGroup = g; applyFilters();
+        }
+
+        function closeModal() { document.getElementById('productModal').classList.remove('active'); }
+        autoScan();
+    </script>
+</body>
+</html>
