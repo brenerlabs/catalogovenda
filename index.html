@@ -10,62 +10,49 @@
         :root { --primary: #111; --accent: #25d366; --bg: #fff; --gray: #f4f4f4; }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
         
-        /* HEADER & LOGO */
         header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
         .logo-area { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
         .logo-area img { height: 45px; width: auto; }
         .logo-area h1 { font-family: 'Oswald'; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* BUSCA E FILTROS */
         .controls { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
         #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; }
         .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; font-size: 0.9rem; }
 
-        /* CATEGORIAS (CHIPS) */
-        .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 10px 15px; scrollbar-width: none; justify-content: center; }
-        .chip { background: var(--gray); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; white-space: nowrap; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
-        .chip.active { background: #000; color: #fff; border-color: #000; }
-        .chip span { opacity: 0.6; margin-left: 4px; font-size: 0.75rem; }
-
-        /* FAQ LINK */
-        .faq-link { text-align: center; color: var(--accent); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin: 10px 0; text-decoration: underline; }
-
-        /* VITRINE / GRID */
-        .section-title { font-family: 'Oswald'; font-size: 1.1rem; padding: 25px 15px 10px; text-transform: uppercase; border-top: 1px solid #eee; }
+        /* CATEGORIAS CENTRALIZADAS */
+        .section-title { font-family: 'Oswald'; font-size: 1.2rem; padding: 30px 15px 15px; text-transform: uppercase; text-align: center; border-top: 1px solid #eee; }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); max-width: 1200px; margin: 0 auto; } }
 
+        /* EFEITO DE CARREGAMENTO (SKELETON) */
+        .img-container { aspect-ratio: 1/1; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton 1.5s infinite; border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+        @keyframes skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
+        .img-container img.loaded { opacity: 1; }
+
         .card { cursor: pointer; }
-        .img-container { aspect-ratio: 1/1; background: var(--gray); border-radius: 8px; overflow: hidden; margin-bottom: 8px; position: relative; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; }
         .p-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
         .p-mod { font-size: 0.7rem; color: #888; text-transform: uppercase; }
         .p-price { font-size: 1rem; font-weight: 700; margin-top: 5px; }
 
-        /* MODAL FAQ (CENTRALIZADO) */
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index: 3000; display:none; align-items:center; justify-content:center; }
-        .modal-faq { background:#fff; width: 90%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; }
-        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; cursor: pointer; }
-        .faq-q { font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .faq-a { display: none; padding-top: 10px; color: #666; font-size: 0.85rem; }
-
-        /* DRAWER LATERAL (CARRINHO/TAMANHO) */
-        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2500; transition: 0.4s ease; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+        /* DRAWER E GALERIA */
+        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2500; transition: 0.4s ease; display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
-        @media (min-width: 768px) { #productDrawer { width: 450px; } }
+        @media (min-width: 768px) { #productDrawer { width: 450px; border-left: 1px solid #eee; } }
 
-        .drawer-content { flex: 1; overflow-y: auto; padding: 20px; }
+        .swiper-container { width: 100%; height: 400px; background: var(--gray); }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+
         .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
         .size-btn { border: 1px solid #ddd; padding: 12px; text-align: center; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .size-btn.selected { background: #000; color: #fff; }
 
-        /* BARRA FRETE */
         #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 100; }
         .bar-container { background: #eee; height: 6px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.4s; }
 
-        #cartFloat { position: fixed; bottom: 80px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 1500; font-weight: bold; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        #cartFloat { position: fixed; bottom: 80px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 1500; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -75,53 +62,44 @@
             <img src="logo1.png" alt="Club da Bola">
             <h1>Club da Bola</h1>
         </div>
-        
         <div class="controls">
             <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="applyFilters()">
             <div class="select-row">
-                <select id="catFilter" onchange="applyFilters()">
-                    <option value="todos">Todas as categorias</option>
-                </select>
+                <select id="catFilter" onchange="applyFilters()"><option value="todos">Categorias</option></select>
                 <select id="modelFilter" onchange="applyFilters()">
-                    <option value="todos">Todos os modelos</option>
-                    <option value="torcedor">Modelo Torcedor</option>
-                    <option value="jogador">Modelo Jogador</option>
+                    <option value="todos">Modelos</option>
+                    <option value="torcedor">Torcedor</option>
+                    <option value="jogador">Jogador</option>
                 </select>
             </div>
         </div>
-
-        <div class="category-scroll" id="chipsArea"></div>
-        <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
     </header>
 
     <main id="catalog"></main>
 
-    <div class="modal-overlay" id="faqModal">
-        <div class="modal-faq">
-            <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:1.5rem;" onclick="closeFaq()">×</span>
-            <h2 style="font-family:'Oswald'; margin-top:0;">DÚVIDAS FREQUENTES (FAQ)</h2>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">O que é "Tailandesa 1:1 Premium"? <span>+</span></div>
-                <div class="faq-a">É a maior qualidade de réplica do mundo. Tecido, bordados e etiquetas idênticos aos oficiais.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">Qual o prazo de entrega? <span>+</span></div>
-                <div class="faq-a">O prazo médio é de 15 a 25 dias úteis, com código de rastreio enviado por e-mail/WhatsApp.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">Como funciona o Frete Grátis? <span>+</span></div>
-                <div class="faq-a">Oferecemos frete grátis para todo o Brasil em qualquer pedido acima de 5 camisas.</div>
-            </div>
-        </div>
-    </div>
-
     <div id="productDrawer">
         <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
             <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
-            <span style="font-weight:700;">DETALHES DO PRODUTO</span>
+            <span style="font-weight:700;">DETALHES</span>
             <div style="width:24px;"></div>
         </div>
-        <div class="drawer-content" id="drawerBody"></div>
+        
+        <div style="flex:1; overflow-y:auto;">
+            <div class="swiper swiper-gallery">
+                <div class="swiper-wrapper" id="galleryWrapper"></div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+
+            <div style="padding:20px;">
+                <div id="drawerInfo"></div>
+                <div class="size-grid">
+                    ${['P','M','G','GG'].map(s => `<div class="size-btn" onclick="selSize(this, '${s}')">${s}</div>`).join('')}
+                </div>
+            </div>
+        </div>
+
         <div style="padding:20px; border-top:1px solid #eee;">
             <button id="btnFinal" style="width:100%; padding:15px; border-radius:8px; border:none; font-weight:bold; background:#ccc; color:#fff;" disabled>SELECIONE O TAMANHO</button>
         </div>
@@ -134,59 +112,69 @@
 
     <a href="#" id="cartFloat" onclick="sendWhatsApp()">🛒 Finalizar Pedido (<span id="cartCount">0</span>)</a>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const USER = 'brenerlabs';
         const REPO = 'catalogovenda';
         let db = [];
         let cart = [];
-        let selectedP = null;
-        let selectedS = null;
+        let gallerySwiper = null;
 
         async function init() {
             try {
                 const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/`);
                 const cats = await res.json();
+                
                 for (let c of cats) {
                     if (c.type !== 'dir' || c.name.startsWith('.')) continue;
                     const resAnos = await fetch(c.url);
                     const anos = await resAnos.json();
+                    
                     for (let a of anos) {
                         const resTimes = await fetch(a.url);
                         const times = await resTimes.json();
+                        
+                        // Lógica para evitar duplicatas: se encontrar dois do mesmo time, o segundo vira "Jogador"
+                        let timeCheck = {};
+
                         for (let t of times) {
                             const resMods = await fetch(t.url);
                             const mods = await resMods.json();
+                            
                             for (let m of mods) {
-                                const isJ = m.name.toLowerCase().includes('jogador');
+                                let modeloIdentificado = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
+                                
+                                // Ajuste automático de duplicidade conforme solicitado
+                                if(timeCheck[t.name] === 'torcedor' && modeloIdentificado === 'torcedor') {
+                                    modeloIdentificado = 'jogador';
+                                }
+                                timeCheck[t.name] = modeloIdentificado;
+
+                                // Busca todas as fotos da pasta
+                                const resFotos = await fetch(m.url);
+                                const fotosFiles = await resFotos.json();
+                                const fotosList = fotosFiles.filter(f => f.name.match(/\.(png|jpe?g|webp)$/i)).map(f => f.path);
+
                                 db.push({
                                     id: Math.random().toString(36).substr(2,9),
                                     cat: c.name, ano: a.name, nome: t.name,
-                                    mod: isJ ? 'jogador' : 'torcedor',
-                                    path: m.path, preco: isJ ? 189 : 169
+                                    mod: modeloIdentificado,
+                                    path: m.path, 
+                                    fotos: fotosList,
+                                    preco: modeloIdentificado === 'jogador' ? 189 : 169
                                 });
                             }
                         }
                     }
                 }
                 render();
-            } catch (e) { console.error("Erro ao carregar GitHub", e); }
+            } catch (e) { console.error(e); }
         }
 
         function render() {
             const catalog = document.getElementById('catalog');
-            const chips = document.getElementById('chipsArea');
-            const selCat = document.getElementById('catFilter');
-            
             const uniqueCats = [...new Set(db.map(p => p.cat))];
             
-            // Chips & Select
-            chips.innerHTML = `<div class="chip active" onclick="setFilter('todos')">Tudo <span>(${db.length})</span></div>`;
-            uniqueCats.forEach(c => {
-                const count = db.filter(x => x.cat === c).length;
-                chips.innerHTML += `<div class="chip" onclick="setFilter('${c}')">${c} <span>(${count})</span></div>`;
-                selCat.innerHTML += `<option value="${c}">${c}</option>`;
-            });
-
             uniqueCats.forEach(c => {
                 catalog.innerHTML += `
                     <div class="section-group" data-cat="${c}">
@@ -199,7 +187,7 @@
                     grid.innerHTML += `
                         <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}">
                             <div class="img-container">
-                                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.path}/foto1.png">
+                                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')">
                             </div>
                             <div class="p-name">Camisa ${p.nome}</div>
                             <div class="p-mod">Modelo ${p.mod} - ${p.ano}</div>
@@ -210,89 +198,60 @@
         }
 
         function openDrawer(id) {
-            selectedP = db.find(x => x.id === id);
-            selectedS = null;
-            document.getElementById('drawerBody').innerHTML = `
-                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${selectedP.path}/foto1.png" style="width:100%; border-radius:12px; margin-bottom:20px;">
-                <div style="font-size:0.75rem; color:var(--accent); font-weight:bold; margin-bottom:5px;">TAILANDESA 1:1 PREMIUM</div>
-                <h2 style="font-family:'Oswald'; margin:0; text-transform:uppercase;">${selectedP.nome} - ${selectedP.ano}</h2>
-                <div style="color:#888; font-size:0.85rem; margin-bottom:15px;">Modelo ${selectedP.mod} - Tecido Respirável</div>
-                <div style="font-size:1.3rem; font-weight:bold;">R$ ${selectedP.preco},00</div>
-                
-                <div style="margin-top:30px; font-weight:bold; font-size:0.9rem;">SELECIONE O TAMANHO <span style="font-weight:normal; font-size:0.7rem; color:#888;">(e entre em contato)</span></div>
-                <div class="size-grid">
-                    ${['P','M','G','GG'].map(s => `<div class="size-btn" onclick="selSize(this, '${s}')">${s}</div>`).join('')}
-                </div>
+            const p = db.find(x => x.id === id);
+            const wrapper = document.getElementById('galleryWrapper');
+            wrapper.innerHTML = p.fotos.map(f => `
+                <div class="swiper-slide">
+                    <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${f}" onclick="window.open(this.src)">
+                </div>`).join('');
+
+            document.getElementById('drawerInfo').innerHTML = `
+                <h2 style="font-family:'Oswald'; margin:0;">${p.nome.toUpperCase()} - ${p.ano}</h2>
+                <div style="color:#888; font-size:0.85rem; margin-bottom:10px;">Modelo ${p.mod}</div>
+                <div style="font-size:1.4rem; font-weight:bold; color:var(--primary);">R$ ${p.preco},00</div>
             `;
+
+            if(gallerySwiper) gallerySwiper.destroy();
+            gallerySwiper = new Swiper('.swiper-gallery', {
+                pagination: { el: '.swiper-pagination' },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            });
+
             document.getElementById('productDrawer').classList.add('active');
-            updateBtn();
         }
 
         function selSize(el, s) {
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
-            selectedS = s;
-            updateBtn();
-        }
-
-        function updateBtn() {
             const btn = document.getElementById('btnFinal');
-            if(selectedS) {
-                btn.style.background = "#000";
-                btn.innerText = `ADICIONAR AO CARRINHO`;
-                btn.disabled = false;
-                btn.onclick = addToCart;
-            }
-        }
-
-        function addToCart() {
-            cart.push({...selectedP, tamanho: selectedS});
-            document.getElementById('cartFloat').style.display = 'block';
-            document.getElementById('cartCount').innerText = cart.length;
-            updateShipping();
-            closeDrawer();
+            btn.disabled = false;
+            btn.style.background = "#000";
+            btn.innerText = `ADICIONAR (${s})`;
+            btn.onclick = () => {
+                cart.push({nome: document.querySelector('#drawerInfo h2').innerText, tamanho: s});
+                updateShipping();
+                closeDrawer();
+            };
         }
 
         function updateShipping() {
-            const perc = Math.min((cart.length / 5) * 100, 100);
+            const count = cart.length;
+            document.getElementById('cartFloat').style.display = count > 0 ? 'block' : 'none';
+            document.getElementById('cartCount').innerText = count;
+            const perc = Math.min((count / 5) * 100, 100);
             document.getElementById('barFill').style.width = perc + '%';
-            const text = document.getElementById('shippingText');
-            if(cart.length >= 5) text.innerHTML = "✅ PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS!";
-            else text.innerHTML = `Faltam ${5 - cart.length} camisas para Frete Grátis!`;
         }
 
         function applyFilters() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const mod = document.getElementById('modelFilter').value;
-            const cat = document.getElementById('catFilter').value;
-
-            document.querySelectorAll('.card').forEach(card => {
-                const matchSearch = card.dataset.nome.includes(search);
-                const matchMod = mod === 'todos' || card.dataset.mod === mod;
-                const matchCat = cat === 'todos' || card.closest('.section-group').dataset.cat === cat;
-                card.style.display = (matchSearch && matchMod && matchCat) ? 'block' : 'none';
+            const s = document.getElementById('searchInput').value.toLowerCase();
+            const m = document.getElementById('modelFilter').value;
+            document.querySelectorAll('.card').forEach(c => {
+                const match = c.dataset.nome.includes(s) && (m === 'todos' || c.dataset.mod === m);
+                c.style.display = match ? 'block' : 'none';
             });
         }
 
-        function setFilter(c) {
-            document.getElementById('catFilter').value = c;
-            applyFilters();
-            document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function sendWhatsApp() {
-            let msg = "Olá Club da Bola! Gostaria de encomendar:\n\n";
-            cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.tamanho}\n`);
-            if(cart.length >= 5) msg += "\n🚀 FRETE GRÁTIS APLICADO!";
-            window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
-        }
-
-        function openFaq() { document.getElementById('faqModal').style.display = 'flex'; }
-        function closeFaq() { document.getElementById('faqModal').style.display = 'none'; }
-        function toggleFaq(el) { el.querySelector('.faq-a').style.display = el.querySelector('.faq-a').style.display === 'block' ? 'none' : 'block'; }
         function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
-        
         init();
     </script>
 </body>
