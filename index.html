@@ -3,269 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club da Bola - Catálogo Executivo</title>
+    <title>Club da Bola - Catálogo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1a1a1a; --accent: #25d366; --gray-light: #f8f9fa; --text-main: #333; --text-muted: #6c757d; --gold: #d4af37; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: var(--text-main); line-height: 1.5; }
+        :root { --primary: #111; --accent: #25d366; --bg: #fff; --gray: #f4f4f4; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
         
-        /* HEADER EXECUTIVO */
-        header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 1000; }
-        .brand-container { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .brand-container img { height: 32px; width: auto; }
-        .brand-container h1 { margin: 0; font-family: 'Oswald', sans-serif; font-size: 1.25rem; letter-spacing: 0.5px; text-transform: uppercase; }
+        /* HEADER & LOGO */
+        header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .logo-area { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .logo-area img { height: 45px; width: auto; }
+        .logo-area h1 { font-family: 'Oswald'; font-size: 1.5rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        .nav-tools { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
-        .search-box input { width: 100%; padding: 10px 15px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem; }
+        /* BUSCA E FILTROS */
+        .controls { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+        #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; font-size: 0.9rem; }
 
-        /* FAQ SUPERIOR */
-        .faq-top { background: var(--gray-light); padding: 10px 20px; border-bottom: 1px solid #eee; }
-        .faq-trigger { font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--primary); display: flex; align-items: center; gap: 5px; }
-        .faq-content { display: none; padding: 15px 0; }
-        .faq-content.active { display: block; }
-        .faq-card { background: #fff; padding: 12px; border-radius: 6px; border: 1px solid #eee; margin-bottom: 8px; font-size: 0.8rem; }
+        /* CATEGORIAS (CHIPS) */
+        .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 10px 15px; scrollbar-width: none; justify-content: center; }
+        .chip { background: var(--gray); border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; white-space: nowrap; cursor: pointer; font-size: 0.85rem; font-weight: 500; }
+        .chip.active { background: #000; color: #fff; border-color: #000; }
+        .chip span { opacity: 0.6; margin-left: 4px; font-size: 0.75rem; }
 
-        /* BARRA DE FRETE GRÁTIS */
-        #shippingPromo { background: #fff; padding: 15px 20px; border-bottom: 1px solid #eee; display: none; }
-        #shippingPromo.active { display: block; }
-        .promo-text { font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; text-align: center; }
-        .progress-container { background: #eee; height: 8px; border-radius: 10px; overflow: hidden; }
-        .progress-bar { background: var(--gold); height: 100%; width: 0%; transition: 0.5s ease; }
-        .progress-bar.complete { background: var(--accent); }
+        /* FAQ LINK */
+        .faq-link { text-align: center; color: var(--accent); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin: 10px 0; text-decoration: underline; }
 
-        /* FILTROS E PRODUTOS */
-        .filter-wrapper { padding: 10px 20px; display: flex; gap: 8px; overflow-x: auto; background: #fff; border-bottom: 1px solid #eee; scrollbar-width: none; }
-        .filter-chip { background: #fff; border: 1px solid #ddd; padding: 6px 14px; border-radius: 4px; white-space: nowrap; cursor: pointer; font-size: 0.8rem; font-weight: 500; }
-        .filter-chip.active { background: var(--primary); color: #fff; }
+        /* VITRINE / GRID */
+        .section-title { font-family: 'Oswald'; font-size: 1.1rem; padding: 25px 15px 10px; text-transform: uppercase; border-top: 1px solid #eee; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
+        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); max-width: 1200px; margin: 0 auto; } }
 
-        .section-title { font-family: 'Oswald', sans-serif; font-size: 1rem; padding: 20px 20px 10px; text-transform: uppercase; }
-        .product-card { width: 170px; padding-bottom: 15px; cursor: pointer; }
-        .img-box { width: 100%; aspect-ratio: 1/1; background: #fdfdfd; border-radius: 4px; border: 1px solid #f0f0f0; overflow: hidden; margin-bottom: 10px; }
-        .img-box img { width: 100%; height: 100%; object-fit: contain; }
-        
-        .p-old-price { font-size: 0.75rem; color: #b0b0b0; text-decoration: line-through; }
-        .p-price { font-size: 0.95rem; font-weight: 600; color: var(--primary); }
+        .card { cursor: pointer; }
+        .img-container { aspect-ratio: 1/1; background: var(--gray); border-radius: 8px; overflow: hidden; margin-bottom: 8px; position: relative; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .p-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+        .p-mod { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .p-price { font-size: 1rem; font-weight: 700; margin-top: 5px; }
 
-        /* MODAL E CARRINHO */
-        #productModal { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2000; transition: 0.3s; display: flex; flex-direction: column; }
-        #productModal.active { right: 0; }
-        .size-btn { border: 1px solid #ddd; padding: 10px; border-radius: 4px; text-align: center; cursor: pointer; }
-        .size-btn.selected { background: var(--primary); color: #fff; }
+        /* MODAL FAQ (CENTRALIZADO) */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index: 3000; display:none; align-items:center; justify-content:center; }
+        .modal-faq { background:#fff; width: 90%; max-width: 500px; border-radius: 15px; padding: 25px; position: relative; }
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; cursor: pointer; }
+        .faq-q { font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .faq-a { display: none; padding-top: 10px; color: #666; font-size: 0.85rem; }
 
-        #cartFloat { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1500; display: none; }
-        #cartFloat.active { display: flex; }
-        #loader { padding: 80px 0; text-align: center; }
+        /* DRAWER LATERAL (CARRINHO/TAMANHO) */
+        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2500; transition: 0.4s ease; display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+        #productDrawer.active { right: 0; }
+        @media (min-width: 768px) { #productDrawer { width: 450px; } }
+
+        .drawer-content { flex: 1; overflow-y: auto; padding: 20px; }
+        .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .size-btn { border: 1px solid #ddd; padding: 12px; text-align: center; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .size-btn.selected { background: #000; color: #fff; }
+
+        /* BARRA FRETE */
+        #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 100; }
+        .bar-container { background: #eee; height: 6px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
+        .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.4s; }
+
+        #cartFloat { position: fixed; bottom: 80px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 1500; font-weight: bold; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-container">
-            <img src="logo1.png" alt="Logo">
+        <div class="logo-area">
+            <img src="logo1.png" alt="Club da Bola">
             <h1>Club da Bola</h1>
         </div>
-        <div class="nav-tools">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar time..." onkeyup="applyFilters()">
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="applyFilters()">
+            <div class="select-row">
+                <select id="catFilter" onchange="applyFilters()">
+                    <option value="todos">Todas as categorias</option>
+                </select>
+                <select id="modelFilter" onchange="applyFilters()">
+                    <option value="todos">Todos os modelos</option>
+                    <option value="torcedor">Modelo Torcedor</option>
+                    <option value="jogador">Modelo Jogador</option>
+                </select>
             </div>
-            <select id="modelFilter" onchange="applyFilters()" style="padding:10px; border-radius:6px; border:1px solid #ddd;">
-                <option value="todos">Todos</option>
-                <option value="torcedor">Torcedor</option>
-                <option value="jogador">Jogador</option>
-            </select>
         </div>
+
+        <div class="category-scroll" id="chipsArea"></div>
+        <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
     </header>
 
-    <div class="faq-top">
-        <div class="faq-trigger" onclick="document.getElementById('faqContent').classList.toggle('active')">
-            <span>ℹ️</span> INFORMAÇÕES IMPORTANTES
-        </div>
-        <div class="faq-content" id="faqContent">
-            <div class="faq-card"><b>Qualidade Premium:</b> Tailandesa 1:1 original.</div>
-            <div class="faq-card"><b>Frete Grátis:</b> Ganhe frete grátis em pedidos de 5 ou mais peças.</div>
-        </div>
-    </div>
-
-    <div id="shippingPromo">
-        <div class="promo-text" id="promoText">Adicione mais 5 peças para Frete Grátis!</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-    </div>
-
-    <div class="filter-wrapper" id="groupFilters"></div>
-    <div id="loader">Carregando catálogo...</div>
     <main id="catalog"></main>
 
-    <div id="productModal">
-        <div style="padding:18px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-weight:600;">DETALHES</span>
-            <button onclick="closeModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-        </div>
-        <div id="modalBody" style="flex:1; overflow-y:auto; padding:20px;"></div>
-        <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="btnAddCart" style="width:100%; padding:14px; border-radius:6px; border:none; font-weight:600; background:#f0f0f0; color:#aaa;" disabled>SELECIONE O TAMANHO</button>
+    <div class="modal-overlay" id="faqModal">
+        <div class="modal-faq">
+            <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:1.5rem;" onclick="closeFaq()">×</span>
+            <h2 style="font-family:'Oswald'; margin-top:0;">DÚVIDAS FREQUENTES (FAQ)</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">O que é "Tailandesa 1:1 Premium"? <span>+</span></div>
+                <div class="faq-a">É a maior qualidade de réplica do mundo. Tecido, bordados e etiquetas idênticos aos oficiais.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Qual o prazo de entrega? <span>+</span></div>
+                <div class="faq-a">O prazo médio é de 15 a 25 dias úteis, com código de rastreio enviado por e-mail/WhatsApp.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Como funciona o Frete Grátis? <span>+</span></div>
+                <div class="faq-a">Oferecemos frete grátis para todo o Brasil em qualquer pedido acima de 5 camisas.</div>
+            </div>
         </div>
     </div>
 
-    <a href="#" id="cartFloat" onclick="finishOrder()">🛒 FINALIZAR PEDIDO (<span id="cartCount">0</span>)</a>
+    <div id="productDrawer">
+        <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+            <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+            <span style="font-weight:700;">DETALHES DO PRODUTO</span>
+            <div style="width:24px;"></div>
+        </div>
+        <div class="drawer-content" id="drawerBody"></div>
+        <div style="padding:20px; border-top:1px solid #eee;">
+            <button id="btnFinal" style="width:100%; padding:15px; border-radius:8px; border:none; font-weight:bold; background:#ccc; color:#fff;" disabled>SELECIONE O TAMANHO</button>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <div id="shippingBar">
+        <div id="shippingText" style="font-size:0.8rem; font-weight:600; text-align:center;">Adicione 5 camisas para Frete Grátis!</div>
+        <div class="bar-container"><div class="bar-fill" id="barFill"></div></div>
+    </div>
+
+    <a href="#" id="cartFloat" onclick="sendWhatsApp()">🛒 Finalizar Pedido (<span id="cartCount">0</span>)</a>
+
     <script>
-        const GITHUB_USER = 'brenerlabs';
-        const GITHUB_REPO = 'catalogovenda';
-        const FRETE_GRATIS_MIN = 5;
-        
-        let db = []; 
-        let carrinho = [];
-        let activeGroup = 'todos';
+        const USER = 'brenerlabs';
+        const REPO = 'catalogovenda';
+        let db = [];
+        let cart = [];
+        let selectedP = null;
+        let selectedS = null;
 
-        async function fetchJson(url) {
-            const res = await fetch(url);
-            return res.json();
-        }
-
-        async function autoScan() {
+        async function init() {
             try {
-                const categorias = await fetchJson(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/`);
-                for (let cat of categorias) {
-                    if (cat.type !== 'dir' || cat.name.startsWith('.')) continue;
-                    const anos = await fetchJson(cat.url);
-                    for (let ano of anos) {
-                        if (ano.type !== 'dir') continue;
-                        const times = await fetchJson(ano.url);
-                        for (let time of times) {
-                            if (time.type !== 'dir') continue;
-                            const modelos = await fetchJson(time.url);
-                            for (let mod of modelos) {
-                                if (mod.type !== 'dir') continue;
-                                const isJogador = mod.name.toLowerCase().includes('jogador');
+                const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/`);
+                const cats = await res.json();
+                for (let c of cats) {
+                    if (c.type !== 'dir' || c.name.startsWith('.')) continue;
+                    const resAnos = await fetch(c.url);
+                    const anos = await resAnos.json();
+                    for (let a of anos) {
+                        const resTimes = await fetch(a.url);
+                        const times = await resTimes.json();
+                        for (let t of times) {
+                            const resMods = await fetch(t.url);
+                            const mods = await resMods.json();
+                            for (let m of mods) {
+                                const isJ = m.name.toLowerCase().includes('jogador');
                                 db.push({
-                                    id: Math.random().toString(36).substr(2, 9),
-                                    grupo: cat.name,
-                                    ano: ano.name,
-                                    nome: time.name,
-                                    modelo: isJogador ? 'jogador' : 'torcedor',
-                                    pasta: mod.path,
-                                    preco: isJogador ? 189 : 169,
-                                    precoOld: isJogador ? 249 : 219
+                                    id: Math.random().toString(36).substr(2,9),
+                                    cat: c.name, ano: a.name, nome: t.name,
+                                    mod: isJ ? 'jogador' : 'torcedor',
+                                    path: m.path, preco: isJ ? 189 : 169
                                 });
                             }
                         }
                     }
                 }
-                renderSite();
-            } catch (err) { console.error(err); }
+                render();
+            } catch (e) { console.error("Erro ao carregar GitHub", e); }
         }
 
-        function renderSite() {
-            document.getElementById('loader').style.display = 'none';
+        function render() {
             const catalog = document.getElementById('catalog');
-            const filters = document.getElementById('groupFilters');
-            const uniqueGroups = [...new Set(db.map(p => p.grupo))];
+            const chips = document.getElementById('chipsArea');
+            const selCat = document.getElementById('catFilter');
             
-            filters.innerHTML = `<button class="filter-chip active" onclick="setGroup('todos', this)">Todos</button>`;
-            uniqueGroups.forEach(g => {
-                filters.innerHTML += `<button class="filter-chip" onclick="setGroup('${g}', this)">${g}</button>`;
-                const sectionId = g.replace(/\s+/g, '');
+            const uniqueCats = [...new Set(db.map(p => p.cat))];
+            
+            // Chips & Select
+            chips.innerHTML = `<div class="chip active" onclick="setFilter('todos')">Tudo <span>(${db.length})</span></div>`;
+            uniqueCats.forEach(c => {
+                const count = db.filter(x => x.cat === c).length;
+                chips.innerHTML += `<div class="chip" onclick="setFilter('${c}')">${c} <span>(${count})</span></div>`;
+                selCat.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+
+            uniqueCats.forEach(c => {
                 catalog.innerHTML += `
-                    <section class="category-section" id="sec-${sectionId}">
-                        <div class="section-title">${g}</div>
-                        <div class="swiper swiper-${sectionId}"><div class="swiper-wrapper" id="grid-${sectionId}"></div></div>
-                    </section>`;
-                const grid = document.getElementById(`grid-${sectionId}`);
-                db.filter(p => p.grupo === g).forEach(p => {
+                    <div class="section-group" data-cat="${c}">
+                        <div class="section-title">${c}</div>
+                        <div class="product-grid" id="grid-${c.replace(/\s/g,'')}"></div>
+                    </div>`;
+                
+                const grid = document.getElementById(`grid-${c.replace(/\s/g,'')}`);
+                db.filter(p => p.cat === c).forEach(p => {
                     grid.innerHTML += `
-                        <div class="swiper-slide product-card" onclick="openModal('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.modelo}" data-grupo="${p.grupo}">
-                            <div class="img-box"><img src="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${p.pasta}/foto1.png"></div>
-                            <div style="font-weight:600; font-size:0.85rem; text-transform:uppercase;">${p.nome} ${p.ano}</div>
-                            <div class="p-old-price">R$ ${p.precoOld},00</div>
+                        <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}">
+                            <div class="img-container">
+                                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.path}/foto1.png">
+                            </div>
+                            <div class="p-name">Camisa ${p.nome}</div>
+                            <div class="p-mod">Modelo ${p.mod} - ${p.ano}</div>
                             <div class="p-price">R$ ${p.preco},00</div>
                         </div>`;
                 });
             });
-            document.querySelectorAll('.swiper').forEach(s => new Swiper(s, { slidesPerView: 'auto', spaceBetween: 15, freeMode: true }));
         }
 
-        function updateShippingBar() {
-            const count = carrinho.length;
-            const promo = document.getElementById('shippingPromo');
-            const bar = document.getElementById('progressBar');
-            const text = document.getElementById('promoText');
-
-            if(count > 0) {
-                promo.classList.add('active');
-                const percent = Math.min((count / FRETE_GRATIS_MIN) * 100, 100);
-                bar.style.width = percent + '%';
+        function openDrawer(id) {
+            selectedP = db.find(x => x.id === id);
+            selectedS = null;
+            document.getElementById('drawerBody').innerHTML = `
+                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${selectedP.path}/foto1.png" style="width:100%; border-radius:12px; margin-bottom:20px;">
+                <div style="font-size:0.75rem; color:var(--accent); font-weight:bold; margin-bottom:5px;">TAILANDESA 1:1 PREMIUM</div>
+                <h2 style="font-family:'Oswald'; margin:0; text-transform:uppercase;">${selectedP.nome} - ${selectedP.ano}</h2>
+                <div style="color:#888; font-size:0.85rem; margin-bottom:15px;">Modelo ${selectedP.mod} - Tecido Respirável</div>
+                <div style="font-size:1.3rem; font-weight:bold;">R$ ${selectedP.preco},00</div>
                 
-                if(count < FRETE_GRATIS_MIN) {
-                    const faltam = FRETE_GRATIS_MIN - count;
-                    text.innerHTML = `Faltam apenas <b>${faltam}</b> ${faltam === 1 ? 'peça' : 'peças'} para ganhar <b>Frete Grátis!</b>`;
-                    bar.classList.remove('complete');
-                } else {
-                    text.innerHTML = `🎉 Parabéns! Você ganhou <b>FRETE GRÁTIS!</b>`;
-                    bar.classList.add('complete');
-                }
-            } else {
-                promo.classList.remove('active');
+                <div style="margin-top:30px; font-weight:bold; font-size:0.9rem;">SELECIONE O TAMANHO <span style="font-weight:normal; font-size:0.7rem; color:#888;">(e entre em contato)</span></div>
+                <div class="size-grid">
+                    ${['P','M','G','GG'].map(s => `<div class="size-btn" onclick="selSize(this, '${s}')">${s}</div>`).join('')}
+                </div>
+            `;
+            document.getElementById('productDrawer').classList.add('active');
+            updateBtn();
+        }
+
+        function selSize(el, s) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedS = s;
+            updateBtn();
+        }
+
+        function updateBtn() {
+            const btn = document.getElementById('btnFinal');
+            if(selectedS) {
+                btn.style.background = "#000";
+                btn.innerText = `ADICIONAR AO CARRINHO`;
+                btn.disabled = false;
+                btn.onclick = addToCart;
             }
         }
 
-        function openModal(id) {
-            const p = db.find(x => x.id === id);
-            selectedProduct = p;
-            document.getElementById('modalBody').innerHTML = `
-                <img src="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${p.pasta}/foto1.png" style="width:100%; border-radius:4px; margin-bottom:15px;">
-                <div style="font-family:'Oswald'; font-size:1.2rem;">CAMISA ${p.nome.toUpperCase()}</div>
-                <div style="color:var(--accent); font-weight:bold; font-size:1.4rem;">R$ ${p.preco},00</div>
-                <div style="margin: 15px 0 10px; font-weight:600; font-size:0.8rem;">TAMANHO:</div>
-                <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;">
-                    ${['P','M','G','GG','EXG'].map(s => `<div class="size-btn" onclick="selectSize(this, '${s}')">${s}</div>`).join('')}
-                </div>`;
-            document.getElementById('productModal').classList.add('active');
+        function addToCart() {
+            cart.push({...selectedP, tamanho: selectedS});
+            document.getElementById('cartFloat').style.display = 'block';
+            document.getElementById('cartCount').innerText = cart.length;
+            updateShipping();
+            closeDrawer();
         }
 
-        function selectSize(btn, s) {
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            const addBtn = document.getElementById('btnAddCart');
-            addBtn.disabled = false;
-            addBtn.style.background = 'var(--primary)';
-            addBtn.style.color = '#fff';
-            addBtn.innerText = `ADICIONAR (${s})`;
-            addBtn.onclick = () => {
-                carrinho.push({...selectedProduct, tamanho: s});
-                document.getElementById('cartFloat').classList.add('active');
-                document.getElementById('cartCount').innerText = carrinho.length;
-                updateShippingBar();
-                closeModal();
-            };
-        }
-
-        function finishOrder() {
-            let msg = "Olá Club da Bola! Gostaria de fazer este pedido:\n\n";
-            carrinho.forEach(i => msg += `• ${i.nome} (${i.modelo}) - Tam: ${i.tamanho}\n`);
-            if(carrinho.length >= FRETE_GRATIS_MIN) msg += "\n✅ Benefício: FRETE GRÁTIS ATIVADO";
-            window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
+        function updateShipping() {
+            const perc = Math.min((cart.length / 5) * 100, 100);
+            document.getElementById('barFill').style.width = perc + '%';
+            const text = document.getElementById('shippingText');
+            if(cart.length >= 5) text.innerHTML = "✅ PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS!";
+            else text.innerHTML = `Faltam ${5 - cart.length} camisas para Frete Grátis!`;
         }
 
         function applyFilters() {
-            const s = document.getElementById('searchInput').value.toLowerCase();
-            const m = document.getElementById('modelFilter').value;
-            document.querySelectorAll('.product-card').forEach(c => {
-                c.style.display = (c.dataset.nome.includes(s) && (m==='todos' || c.dataset.mod===m) && (activeGroup==='todos' || c.dataset.grupo===activeGroup)) ? 'block' : 'none';
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const mod = document.getElementById('modelFilter').value;
+            const cat = document.getElementById('catFilter').value;
+
+            document.querySelectorAll('.card').forEach(card => {
+                const matchSearch = card.dataset.nome.includes(search);
+                const matchMod = mod === 'todos' || card.dataset.mod === mod;
+                const matchCat = cat === 'todos' || card.closest('.section-group').dataset.cat === cat;
+                card.style.display = (matchSearch && matchMod && matchCat) ? 'block' : 'none';
             });
         }
 
-        function setGroup(g, btn) {
-            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeGroup = g; applyFilters();
+        function setFilter(c) {
+            document.getElementById('catFilter').value = c;
+            applyFilters();
+            document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        function closeModal() { document.getElementById('productModal').classList.remove('active'); }
-        autoScan();
+        function sendWhatsApp() {
+            let msg = "Olá Club da Bola! Gostaria de encomendar:\n\n";
+            cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.tamanho}\n`);
+            if(cart.length >= 5) msg += "\n🚀 FRETE GRÁTIS APLICADO!";
+            window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
+        }
+
+        function openFaq() { document.getElementById('faqModal').style.display = 'flex'; }
+        function closeFaq() { document.getElementById('faqModal').style.display = 'none'; }
+        function toggleFaq(el) { el.querySelector('.faq-a').style.display = el.querySelector('.faq-a').style.display === 'block' ? 'none' : 'block'; }
+        function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
+        
+        init();
     </script>
 </body>
 </html>
