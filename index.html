@@ -7,110 +7,91 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #111; --accent: #25d366; --bg: #fff; --gray: #f4f4f4; }
+        :root { --primary: #111; --accent: #25d366; --bg: #fff; }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
         
         header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .logo-area { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .logo-area img { height: 50px; width: auto; }
         .logo-area h1 { font-family: 'Oswald'; font-size: 1.6rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
         .controls { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
-        #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; }
+        #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 100%; box-sizing: border-box; }
         .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; font-size: 0.9rem; }
+        select { padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
 
-        .faq-link { text-align: center; color: var(--accent); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin: 15px 0; text-decoration: underline; }
+        .faq-link { text-align: center; color: var(--accent); font-weight: 700; cursor: pointer; margin: 10px 0; font-size: 0.9rem; text-decoration: underline; }
 
-        .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 40px 15px 15px; text-transform: uppercase; text-align: center; }
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 15px; }
-        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); max-width: 1200px; margin: 0 auto; } }
-
-        .img-container { aspect-ratio: 1/1; background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton 1.5s infinite; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
-        @keyframes skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* GRID E SKELETON */
+        .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 30px 15px 10px; text-transform: uppercase; text-align: center; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
+        
+        .img-container { aspect-ratio: 1/1; background: #eee; border-radius: 12px; overflow: hidden; position: relative; }
         .img-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
         .img-container img.loaded { opacity: 1; }
 
-        /* MODAL FAQ CENTRALIZADO */
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index: 5000; display:none; align-items:center; justify-content:center; padding: 20px; }
-        .modal-faq { background:#fff; width: 100%; max-width: 500px; border-radius: 20px; padding: 30px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .faq-item { border-bottom: 1px solid #eee; padding: 18px 0; cursor: pointer; }
-        .faq-q { font-weight: 700; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
-        .faq-a { display: none; padding-top: 12px; color: #666; font-size: 0.9rem; line-height: 1.5; }
+        /* MODAL FAQ */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index: 5000; display:none; align-items:center; justify-content:center; }
+        .modal-faq { background:#fff; width: 90%; max-width: 450px; border-radius: 15px; padding: 25px; position: relative; }
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; cursor: pointer; font-weight: 600; }
+        .faq-a { display: none; padding-top: 10px; color: #666; font-weight: 400; font-size: 0.85rem; }
 
         /* DRAWER LATERAL */
-        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 3000; transition: 0.4s ease; display: flex; flex-direction: column; }
+        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 4000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
-        @media (min-width: 768px) { #productDrawer { width: 450px; border-left: 1px solid #eee; } }
+        @media (min-width: 768px) { #productDrawer { width: 450px; } }
 
         .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
-        .size-btn { border: 1px solid #ddd; padding: 14px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .size-btn { border: 1px solid #ddd; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; }
         .size-btn.selected { background: #000; color: #fff; }
 
-        #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 100; }
-        .bar-container { background: #eee; height: 8px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 1000; }
+        .bar-container { background: #eee; height: 8px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.6s; }
 
-        #cartFloat { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: #fff; padding: 16px 28px; border-radius: 40px; display: none; z-index: 2000; font-weight: 800; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        #cartFloat { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 3000; font-weight: 800; text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-area">
-            <img src="logo1.png" alt="Club da Bola">
-            <h1>Club da Bola</h1>
-        </div>
+        <div class="logo-area"><h1>Club da Bola</h1></div>
         <div class="controls">
-            <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="applyFilters()">
+            <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="filter()">
             <div class="select-row">
-                <select id="catFilter" onchange="applyFilters()"><option value="todos">Categorias</option></select>
-                <select id="modelFilter" onchange="applyFilters()">
-                    <option value="todos">Modelos</option>
-                    <option value="torcedor">Torcedor</option>
-                    <option value="jogador">Jogador</option>
-                </select>
+                <select id="catFilter" onchange="filter()"><option value="todos">Categorias</option></select>
+                <select id="modelFilter" onchange="filter()"><option value="todos">Modelos</option></select>
             </div>
+            <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
         </div>
-        <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
     </header>
 
+    <div id="loader" style="padding: 50px; font-weight: 700;">Carregando estoque premium...</div>
     <main id="catalog"></main>
 
     <div class="modal-overlay" id="faqModal">
         <div class="modal-faq">
-            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:1.8rem; font-weight:bold;" onclick="closeFaq()">×</span>
-            <h2 style="font-family:'Oswald'; margin-top:0; font-size:1.5rem; text-transform:uppercase;">Dúvidas Frequentes (FAQ)</h2>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">O que é "Tailandesa 1:1 Premium"? <span>+</span></div>
-                <div class="faq-a">É a maior qualidade de réplica disponível. O tecido, bordados, costuras e etiquetas são idênticos aos modelos vendidos nas lojas oficiais.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">Qual o prazo de entrega? <span>+</span></div>
-                <div class="faq-a">O prazo médio é de 15 a 25 dias úteis. Após a postagem, você receberá o código de rastreio para acompanhar o pedido.</div>
-            </div>
-            <div class="faq-item" onclick="toggleFaq(this)">
-                <div class="faq-q">Como funciona o Frete Grátis? <span>+</span></div>
-                <div class="faq-a">O frete é grátis para todo o Brasil em qualquer compra que contenha 5 ou mais camisas.</div>
-            </div>
+            <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:1.5rem;" onclick="closeFaq()">✕</span>
+            <h2 style="font-family:'Oswald'; margin-bottom:20px;">DÚVIDAS FREQUENTES</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">O que é "Tailandesa 1:1 Premium"? <div class="faq-a">É a qualidade máxima. Bordados, tecido e etiquetas idênticos aos oficiais.</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)">Qual o prazo de entrega? <div class="faq-a">Média de 15 a 25 dias úteis com código de rastreio.</div></div>
+            <div class="faq-item" onclick="toggleFaq(this)">Como funciona o Frete Grátis? <div class="faq-a">Automático para pedidos com 5 ou mais camisas.</div></div>
         </div>
     </div>
 
     <div id="productDrawer">
         <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-            <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.8rem; cursor:pointer;">✕</button>
-            <span style="font-weight:800;">DETALHES DO PRODUTO</span>
-            <div style="width:30px;"></div>
+            <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">✕</button>
+            <span style="font-weight:800;">DETALHES</span>
+            <div style="width:24px;"></div>
         </div>
         <div style="flex:1; overflow-y:auto;">
             <div class="swiper swiper-gallery">
                 <div class="swiper-wrapper" id="galleryWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
-            <div style="padding:25px;" id="drawerContent"></div>
+            <div style="padding:20px;" id="drawerContent"></div>
         </div>
         <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa;" disabled>ESCOLHA O TAMANHO</button>
+            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa;" disabled>SELECIONE O TAMANHO</button>
         </div>
     </div>
 
@@ -127,83 +108,76 @@
         const REPO = 'catalogovenda';
         let db = [];
         let cart = [];
-        let gallerySwiper = null;
 
         async function init() {
             try {
                 const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/`);
-                if(!res.ok) throw new Error();
                 const cats = await res.json();
-                
+                document.getElementById('loader').style.display = 'none';
+
                 for (let c of cats) {
                     if (c.type !== 'dir' || c.name.startsWith('.')) continue;
-                    const resAnos = await fetch(c.url);
-                    const anos = await resAnos.json();
-                    for (let a of anos) {
-                        const resTimes = await fetch(a.url);
-                        const times = await resTimes.json();
-                        let tracker = {};
-                        for (let t of times) {
-                            const resMods = await fetch(t.url);
-                            const mods = await resMods.json();
-                            for (let m of mods) {
-                                const resFiles = await fetch(m.url);
-                                const files = await resFiles.json();
-                                const fotos = files.filter(f => f.name.match(/\.(png|jpe?g|webp)$/i)).map(f => f.path);
-                                if(fotos.length === 0) continue;
+                    
+                    const section = document.createElement('div');
+                    section.className = 'section-group';
+                    section.innerHTML = `<div class="section-title">${c.name}</div><div class="product-grid" id="grid-${c.sha}"></div>`;
+                    document.getElementById('catalog').appendChild(section);
+                    document.getElementById('catFilter').innerHTML += `<option value="${c.name}">${c.name}</option>`;
 
-                                let mod = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
-                                if(tracker[t.name] === 'torcedor' && mod === 'torcedor') mod = 'jogador';
-                                tracker[t.name] = mod;
+                    // Carregamento ASSÍNCRONO das subpastas para não travar a API
+                    loadSubfolders(c.url, `grid-${c.sha}`, c.name);
+                }
+            } catch (e) { document.getElementById('loader').innerText = "Erro ao conectar. Tente atualizar a página."; }
+        }
 
-                                db.push({
-                                    id: Math.random().toString(36).substr(2,9),
-                                    cat: c.name, ano: a.name, nome: t.name, mod,
-                                    fotos, preco: mod === 'jogador' ? 189 : 169
-                                });
-                            }
-                        }
+        async function loadSubfolders(url, gridId, catName) {
+            const res = await fetch(url);
+            const anos = await res.json();
+            for (let a of anos) {
+                const resTimes = await fetch(a.url);
+                const times = await resTimes.json();
+                for (let t of times) {
+                    const resMods = await fetch(t.url);
+                    const mods = await resMods.json();
+                    let tracker = {};
+                    for (let m of mods) {
+                        const resFiles = await fetch(m.url);
+                        const files = await resFiles.json();
+                        const fotos = files.filter(f => f.name.match(/\.(png|jpe?g|webp)$/i)).map(f => f.path);
+                        if(fotos.length === 0) continue;
+
+                        let mod = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
+                        if(tracker[t.name] === 'torcedor' && mod === 'torcedor') mod = 'jogador';
+                        tracker[t.name] = mod;
+
+                        const item = { id: Math.random().toString(36).substr(2,9), cat: catName, ano: a.name, nome: t.name, mod, fotos, preco: mod === 'jogador' ? 189 : 169 };
+                        db.push(item);
+                        renderCard(item, gridId);
                     }
                 }
-                render();
-            } catch (e) {
-                document.getElementById('catalog').innerHTML = `<p style="text-align:center; padding:50px;">Erro ao carregar. Verifique o Repositório.</p>`;
             }
         }
 
-        function render() {
-            const catalog = document.getElementById('catalog');
-            const selCat = document.getElementById('catFilter');
-            const uniqueCats = [...new Set(db.map(p => p.cat))];
-            
-            uniqueCats.forEach(c => {
-                selCat.innerHTML += `<option value="${c}">${c}</option>`;
-                catalog.innerHTML += `<div class="section-group" data-cat="${c}"><div class="section-title">${c}</div><div class="product-grid" id="grid-${c.replace(/\s/g,'')}"></div></div>`;
-                db.filter(p => p.cat === c).forEach(p => {
-                    document.getElementById(`grid-${c.replace(/\s/g,'')}`).innerHTML += `
-                        <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}" style="cursor:pointer;">
-                            <div class="img-container"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')"></div>
-                            <div style="font-weight:700; font-size:0.9rem;">Camisa ${p.nome}</div>
-                            <div style="font-size:0.75rem; color:#888; text-transform:uppercase;">Modelo ${p.mod} - ${p.ano}</div>
-                            <div style="font-weight:800; font-size:1.1rem; margin-top:5px;">R$ ${p.preco},00</div>
-                        </div>`;
-                });
-            });
+        function renderCard(p, gridId) {
+            document.getElementById(gridId).innerHTML += `
+                <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}" data-cat="${p.cat}">
+                    <div class="img-container"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')"></div>
+                    <div style="font-weight:700; font-size:0.9rem; margin-top:8px;">Camisa ${p.nome}</div>
+                    <div style="font-size:0.75rem; color:#888;">Modelo ${p.mod} - ${p.ano}</div>
+                    <div style="font-weight:800; margin-top:5px;">R$ ${p.preco},00</div>
+                </div>`;
         }
 
         function openDrawer(id) {
             const p = db.find(x => x.id === id);
             document.getElementById('galleryWrapper').innerHTML = p.fotos.map(f => `<div class="swiper-slide"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${f}" style="width:100%; height:100%; object-fit:contain;"></div>`).join('');
             document.getElementById('drawerContent').innerHTML = `
-                <div style="color:var(--accent); font-weight:800; font-size:0.7rem; text-transform:uppercase; margin-bottom:5px;">Tailandesa 1:1 Premium</div>
-                <h2 style="font-family:'Oswald'; margin:0; font-size:1.6rem;">${p.nome.toUpperCase()} - ${p.ano}</h2>
-                <div style="color:#777; margin-top:5px;">Modelo ${p.mod} • Alta Performance</div>
-                <div style="margin-top:20px; font-size:1.8rem; font-weight:900;">R$ ${p.preco},00</div>
-                <div style="margin-top:25px; font-weight:800; font-size:0.9rem;">SELECIONE O TAMANHO:</div>
+                <h2 style="font-family:'Oswald'; margin:0;">${p.nome.toUpperCase()}</h2>
+                <div style="color:#777; margin-bottom:15px;">Modelo ${p.mod} - ${p.ano}</div>
+                <div style="font-size:1.8rem; font-weight:900;">R$ ${p.preco},00</div>
                 <div class="size-grid">${['P','M','G','GG'].map(s => `<div class="size-btn" onclick="selSize(this, '${s}', '${p.id}')">${s}</div>`).join('')}</div>`;
             
-            if(gallerySwiper) gallerySwiper.destroy();
-            gallerySwiper = new Swiper('.swiper-gallery', { pagination: { el: '.swiper-pagination' } });
+            new Swiper('.swiper-gallery', { pagination: { el: '.swiper-pagination' } });
             document.getElementById('productDrawer').classList.add('active');
         }
 
@@ -211,28 +185,23 @@
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
             const btn = document.getElementById('btnFinal');
-            btn.disabled = false; btn.style.background = "#000"; btn.style.color = "#fff"; btn.innerText = `ADICIONAR AO CARRINHO`;
-            btn.onclick = () => {
-                const p = db.find(x => x.id === id);
-                cart.push({...p, tamanho: s});
-                updateShipping(); closeDrawer();
-            };
+            btn.disabled = false; btn.style.background = "#000"; btn.style.color = "#fff";
+            btn.onclick = () => { cart.push({...db.find(x=>x.id===id), tamanho: s}); updateShipping(); closeDrawer(); };
         }
 
         function updateShipping() {
             const count = cart.length;
             document.getElementById('cartFloat').style.display = count > 0 ? 'block' : 'none';
             document.getElementById('cartCount').innerText = count;
-            const perc = Math.min((count / 5) * 100, 100);
-            document.getElementById('barFill').style.width = perc + '%';
-            document.getElementById('shippingText').innerHTML = count >= 5 ? "✅ PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS!" : `Faltam ${5 - count} camisas para Frete Grátis!`;
+            document.getElementById('barFill').style.width = Math.min((count / 5) * 100, 100) + '%';
         }
 
-        function applyFilters() {
+        function filter() {
             const s = document.getElementById('searchInput').value.toLowerCase();
-            const m = document.getElementById('modelFilter').value;
-            document.querySelectorAll('.card').forEach(c => {
-                c.style.display = (c.dataset.nome.includes(s) && (m === 'todos' || c.dataset.mod === m)) ? 'block' : 'none';
+            const c = document.getElementById('catFilter').value;
+            document.querySelectorAll('.card').forEach(card => {
+                const match = card.dataset.nome.includes(s) && (c === 'todos' || card.dataset.cat === c);
+                card.style.display = match ? 'block' : 'none';
             });
         }
 
@@ -241,7 +210,7 @@
         function toggleFaq(el) { const a = el.querySelector('.faq-a'); a.style.display = a.style.display === 'block' ? 'none' : 'block'; }
         function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
         function sendWhatsApp() {
-            let msg = "Olá Club da Bola! Gostaria de encomendar:\n\n";
+            let msg = "Olá Club da Bola! Gostaria de fazer um pedido:\n\n";
             cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.tamanho}\n`);
             window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
         }
