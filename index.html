@@ -35,6 +35,15 @@
         .price-old { text-decoration: line-through; color: #999; font-size: 0.8rem; margin-right: 5px; }
         .price-new { color: #000; font-weight: 800; font-size: 1rem; }
 
+        /* FAQ STYLE */
+        .faq-container { max-width: 800px; margin: 40px auto; padding: 0 15px; }
+        .faq-item { border-bottom: 1px solid #eee; }
+        .faq-question { width: 100%; padding: 20px 0; background: none; border: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Inter'; font-weight: 700; text-align: left; font-size: 1rem; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; color: #666; font-size: 0.9rem; line-height: 1.6; }
+        .faq-item.active .faq-answer { max-height: 200px; padding-bottom: 20px; }
+        .faq-item.active .plus-icon { transform: rotate(45deg); }
+        .plus-icon { transition: 0.3s; font-size: 1.2rem; font-weight: 400; }
+
         /* DRAWER (DETALHES) */
         #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 4000; transition: 0.4s ease; display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
@@ -44,7 +53,7 @@
         .qty-btn { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: bold; }
 
         /* RODAPÉ E CARRINHO */
-        footer { padding: 30px 15px; text-align: center; border-top: 1px solid #eee; margin-top: 50px; font-size: 0.8rem; color: #777; line-height: 1.6; }
+        footer { padding: 30px 15px; text-align: center; border-top: 1px solid #eee; margin-top: 20px; font-size: 0.8rem; color: #777; line-height: 1.6; }
         
         #shippingBar { position: fixed; bottom: 0; width: 100%; background: #fff; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .bar-bg { background: #eee; height: 6px; border-radius: 10px; width: 80%; margin: 8px auto; overflow: hidden; }
@@ -70,6 +79,25 @@
 
     <main id="catalog"></main>
 
+    <div class="faq-container">
+        <h3 style="font-family:'Oswald'; text-transform: uppercase;">Dúvidas Frequentes</h3>
+        
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">Qual o prazo de entrega? <span class="plus-icon">+</span></button>
+            <div class="faq-answer">O prazo médio de entrega é de 15 a 25 dias úteis, dependendo da sua região.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">As camisas são originais? <span class="plus-icon">+</span></button>
+            <div class="faq-answer">Trabalhamos com camisas tailandesas de qualidade 1:1, com todos os selos e tecidos idênticos aos oficiais.</div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">Como acompanho meu pedido? <span class="plus-icon">+</span></button>
+            <div class="faq-answer">Após o envio, você receberá um código de rastreio via WhatsApp para acompanhar pelo site dos Correios.</div>
+        </div>
+    </div>
+
     <div id="productDrawer">
         <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
             <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
@@ -90,7 +118,7 @@
             <div id="sizeSelector" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px;"></div>
         </div>
         <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="adtn" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#999;" disabled>SELECIONE O TAMANHO</button>
+            <button id="addBtn" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#999;" disabled>SELECIONE O TAMANHO</button>
         </div>
     </div>
 
@@ -113,7 +141,6 @@
     <script>
         const REPO = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
         
-        // LISTA TOTAL DE TIMES (Sincronizado com suas pastas no GitHub)
         const db = [
             { id: "1", cat: "Brasileirão", ano: "2026", nome: "Vasco", mod: "Torcedor", fotos: 2 },
             { id: "2", cat: "Brasileirão", ano: "2026", nome: "Corinthians", mod: "Torcedor", fotos: 2 },
@@ -124,7 +151,8 @@
             { id: "7", cat: "La Liga", ano: "2026", nome: "Real Madrid", mod: "Jogador", fotos: 2 },
             { id: "8", cat: "Seleções", ano: "2026", nome: "Brasil", mod: "Torcedor", fotos: 2 },
             { id: "9", cat: "Premier League", ano: "2026", nome: "Liverpool", mod: "Torcedor", fotos: 2 },
-            { id: "9", cat: "Premier League", ano: "2026", nome: "Arsenal", mod: "Torcedor", fotos: 2 }
+            { id: "10", cat: "Premier League", ano: "2026", nome: "Arsenal", mod: "Torcedor", fotos: 2 },
+            { id: "11", cat: "La Liga", ano: "2026", nome: "Barcelona", mod: "Torcedor", fotos: 2 }
         ];
 
         let cart = [];
@@ -132,7 +160,10 @@
         let selectedSize = null;
         let qty = 1;
 
-        // Função para gerar o link da imagem respeitando exatamente as pastas
+        function toggleFaq(btn) {
+            btn.parentElement.classList.toggle('active');
+        }
+
         function getImgUrl(p, num) {
             return `${REPO}${p.cat}/${p.ano}/${p.nome}/${p.mod}/foto${num}.png`;
         }
@@ -176,7 +207,6 @@
             document.getElementById('qtyVal').innerText = qty;
             const precoFinal = currentItem.mod === "Torcedor" ? 169 : 189;
 
-            // Carrega Swiper de fotos dinamicamente
             let slides = "";
             for(let i=1; i <= currentItem.fotos; i++) {
                 slides += `<div class="swiper-slide"><img src="${getImgUrl(currentItem, i)}" style="width:100%; aspect-ratio:1/1; object-fit:contain;"></div>`;
@@ -250,5 +280,3 @@
     </script>
 </body>
 </html>
-
-
