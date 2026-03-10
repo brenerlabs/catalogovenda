@@ -10,70 +10,79 @@
         :root { --primary: #111; --accent: #25d366; --bg: #fff; }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
         
+        /* HEADER */
         header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
         .logo-area h1 { font-family: 'Oswald'; font-size: 1.6rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        .controls { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+        .controls { max-width: 600px; margin: 0 auto 10px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
         #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 100%; box-sizing: border-box; }
-        .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        select { padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
-
+        
         .faq-link { text-align: center; color: var(--accent); font-weight: 700; cursor: pointer; margin: 10px 0; font-size: 0.9rem; text-decoration: underline; }
 
-        /* GRID E SKELETON */
+        /* GRID E CARDS */
         .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 30px 15px 10px; text-transform: uppercase; text-align: center; }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
         
         .img-container { aspect-ratio: 1/1; background: #eee; border-radius: 12px; overflow: hidden; position: relative; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
-        .img-container img.loaded { opacity: 1; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
 
         /* MODAL FAQ */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index: 5000; display:none; align-items:center; justify-content:center; }
         .modal-faq { background:#fff; width: 90%; max-width: 450px; border-radius: 15px; padding: 25px; position: relative; }
-        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; cursor: pointer; font-weight: 600; }
-        .faq-a { display: none; padding-top: 10px; color: #666; font-weight: 400; font-size: 0.85rem; }
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; cursor: pointer; }
+        .faq-q { font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .faq-a { display: none; padding-top: 10px; color: #666; font-size: 0.85rem; line-height: 1.4; }
 
-        /* DRAWER LATERAL */
-        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 4000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        /* ANIMAÇÃO SUCESSO */
+        .success-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(255, 255, 255, 0.95); width: 120px; height: 120px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 6000; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .success-overlay.active { transform: translate(-50%, -50%) scale(1); }
+        .success-overlay span { color: var(--accent); font-size: 3rem; }
+
+        /* DRAWER */
+        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 4000; transition: 0.4s ease; display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
-        @media (min-width: 768px) { #productDrawer { width: 450px; } }
-
         .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
         .size-btn { border: 1px solid #ddd; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; }
         .size-btn.selected { background: #000; color: #fff; }
 
+        /* BARRA FRETE */
         #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 1000; }
         .bar-container { background: #eee; height: 8px; border-radius: 10px; margin-top: 8px; overflow: hidden; }
         .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.6s; }
 
-        #cartFloat { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 3000; font-weight: 800; text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #cartFloat { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; display: none; z-index: 3000; font-weight: 800; text-decoration: none; }
     </style>
 </head>
 <body>
+
+    <div class="success-overlay" id="successAnim"><span>✓</span><p style="margin:0; font-weight:800; font-size:0.7rem;">ADICIONADO</p></div>
 
     <header>
         <div class="logo-area"><h1>Club da Bola</h1></div>
         <div class="controls">
             <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="filter()">
-            <div class="select-row">
-                <select id="catFilter" onchange="filter()"><option value="todos">Categorias</option></select>
-                <select id="modelFilter" onchange="filter()"><option value="todos">Modelos</option></select>
-            </div>
             <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
         </div>
     </header>
 
-    <div id="loader" style="padding: 50px; font-weight: 700;">Carregando estoque premium...</div>
     <main id="catalog"></main>
 
     <div class="modal-overlay" id="faqModal">
         <div class="modal-faq">
             <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:1.5rem;" onclick="closeFaq()">✕</span>
-            <h2 style="font-family:'Oswald'; margin-bottom:20px;">DÚVIDAS FREQUENTES</h2>
-            <div class="faq-item" onclick="toggleFaq(this)">O que é "Tailandesa 1:1 Premium"? <div class="faq-a">É a qualidade máxima. Bordados, tecido e etiquetas idênticos aos oficiais.</div></div>
-            <div class="faq-item" onclick="toggleFaq(this)">Qual o prazo de entrega? <div class="faq-a">Média de 15 a 25 dias úteis com código de rastreio.</div></div>
-            <div class="faq-item" onclick="toggleFaq(this)">Como funciona o Frete Grátis? <div class="faq-a">Automático para pedidos com 5 ou mais camisas.</div></div>
+            <h2 style="font-family:'Oswald'; margin-bottom:20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">DÚVIDAS FREQUENTES</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">O que é "Tailandesa 1:1 Premium"? <span>+</span></div>
+                <div class="faq-a">Qualidade máxima. Tecido, bordados e etiquetas idênticos aos modelos vendidos em lojas oficiais.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Qual o prazo de entrega? <span>+</span></div>
+                <div class="faq-a">Média de 15 a 25 dias úteis. Você recebe o código de rastreio para acompanhar.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Como funciona o Frete Grátis? <span>+</span></div>
+                <div class="faq-a">Adicione 5 ou mais camisas e o frete fica grátis automaticamente.</div>
+            </div>
         </div>
     </div>
 
@@ -91,7 +100,7 @@
             <div style="padding:20px;" id="drawerContent"></div>
         </div>
         <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa;" disabled>SELECIONE O TAMANHO</button>
+            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa;" disabled>ESCOLHA O TAMANHO</button>
         </div>
     </div>
 
@@ -104,68 +113,37 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        // LISTA MANUAL DE PRODUTOS (Adicione suas camisas aqui)
+        // Isso elimina a lentidão do GitHub!
+        const db = [
+            { id: "1", cat: "Brasileirão", nome: "Vasco", ano: "2024", mod: "Torcedor", preco: 169, fotos: ["brasileirao/2024/vasco/torcedor/foto1.png"] },
+            { id: "2", cat: "Brasileirão", nome: "Flamengo", ano: "2024", mod: "Torcedor", preco: 169, fotos: ["brasileirao/2024/flamengo/torcedor/foto1.png"] },
+            { id: "3", cat: "La Liga", nome: "Real Madrid", ano: "2024", mod: "Jogador", preco: 189, fotos: ["laliga/2024/realmadrid/jogador/foto1.png"] }
+        ];
+
+        let cart = [];
         const USER = 'brenerlabs';
         const REPO = 'catalogovenda';
-        let db = [];
-        let cart = [];
 
-        async function init() {
-            try {
-                const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/`);
-                const cats = await res.json();
-                document.getElementById('loader').style.display = 'none';
-
-                for (let c of cats) {
-                    if (c.type !== 'dir' || c.name.startsWith('.')) continue;
-                    
-                    const section = document.createElement('div');
-                    section.className = 'section-group';
-                    section.innerHTML = `<div class="section-title">${c.name}</div><div class="product-grid" id="grid-${c.sha}"></div>`;
-                    document.getElementById('catalog').appendChild(section);
-                    document.getElementById('catFilter').innerHTML += `<option value="${c.name}">${c.name}</option>`;
-
-                    // Carregamento ASSÍNCRONO das subpastas para não travar a API
-                    loadSubfolders(c.url, `grid-${c.sha}`, c.name);
-                }
-            } catch (e) { document.getElementById('loader').innerText = "Erro ao conectar. Tente atualizar a página."; }
-        }
-
-        async function loadSubfolders(url, gridId, catName) {
-            const res = await fetch(url);
-            const anos = await res.json();
-            for (let a of anos) {
-                const resTimes = await fetch(a.url);
-                const times = await resTimes.json();
-                for (let t of times) {
-                    const resMods = await fetch(t.url);
-                    const mods = await resMods.json();
-                    let tracker = {};
-                    for (let m of mods) {
-                        const resFiles = await fetch(m.url);
-                        const files = await resFiles.json();
-                        const fotos = files.filter(f => f.name.match(/\.(png|jpe?g|webp)$/i)).map(f => f.path);
-                        if(fotos.length === 0) continue;
-
-                        let mod = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
-                        if(tracker[t.name] === 'torcedor' && mod === 'torcedor') mod = 'jogador';
-                        tracker[t.name] = mod;
-
-                        const item = { id: Math.random().toString(36).substr(2,9), cat: catName, ano: a.name, nome: t.name, mod, fotos, preco: mod === 'jogador' ? 189 : 169 };
-                        db.push(item);
-                        renderCard(item, gridId);
-                    }
-                }
-            }
-        }
-
-        function renderCard(p, gridId) {
-            document.getElementById(gridId).innerHTML += `
-                <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}" data-cat="${p.cat}">
-                    <div class="img-container"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')"></div>
-                    <div style="font-weight:700; font-size:0.9rem; margin-top:8px;">Camisa ${p.nome}</div>
-                    <div style="font-size:0.75rem; color:#888;">Modelo ${p.mod} - ${p.ano}</div>
-                    <div style="font-weight:800; margin-top:5px;">R$ ${p.preco},00</div>
-                </div>`;
+        function render() {
+            const catalog = document.getElementById('catalog');
+            const categories = [...new Set(db.map(p => p.cat))];
+            
+            categories.forEach(cat => {
+                const section = document.createElement('div');
+                section.innerHTML = `<div class="section-title">${cat}</div><div class="product-grid" id="grid-${cat.replace(/\s/g,'')}"></div>`;
+                catalog.appendChild(section);
+                
+                db.filter(p => p.cat === cat).forEach(p => {
+                    document.getElementById(`grid-${cat.replace(/\s/g,'')}`).innerHTML += `
+                        <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}">
+                            <div class="img-container"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}"></div>
+                            <div style="font-weight:700; font-size:0.9rem; margin-top:8px;">Camisa ${p.nome}</div>
+                            <div style="font-size:0.75rem; color:#888;">${p.mod} - ${p.ano}</div>
+                            <div style="font-weight:800; margin-top:5px;">R$ ${p.preco},00</div>
+                        </div>`;
+                });
+            });
         }
 
         function openDrawer(id) {
@@ -185,8 +163,13 @@
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
             const btn = document.getElementById('btnFinal');
-            btn.disabled = false; btn.style.background = "#000"; btn.style.color = "#fff";
-            btn.onclick = () => { cart.push({...db.find(x=>x.id===id), tamanho: s}); updateShipping(); closeDrawer(); };
+            btn.disabled = false; btn.style.background = "#000"; btn.style.color = "#fff"; btn.innerText = "ADICIONAR AO CARRINHO";
+            btn.onclick = () => {
+                cart.push({...db.find(x=>x.id===id), tamanho: s});
+                const anim = document.getElementById('successAnim');
+                anim.classList.add('active');
+                setTimeout(() => { anim.classList.remove('active'); updateShipping(); closeDrawer(); }, 800);
+            };
         }
 
         function updateShipping() {
@@ -194,27 +177,30 @@
             document.getElementById('cartFloat').style.display = count > 0 ? 'block' : 'none';
             document.getElementById('cartCount').innerText = count;
             document.getElementById('barFill').style.width = Math.min((count / 5) * 100, 100) + '%';
+            document.getElementById('shippingText').innerHTML = count >= 5 ? "✅ FRETE GRÁTIS LIBERADO!" : `Faltam ${5 - count} camisas para Frete Grátis!`;
         }
 
         function filter() {
             const s = document.getElementById('searchInput').value.toLowerCase();
-            const c = document.getElementById('catFilter').value;
-            document.querySelectorAll('.card').forEach(card => {
-                const match = card.dataset.nome.includes(s) && (c === 'todos' || card.dataset.cat === c);
-                card.style.display = match ? 'block' : 'none';
-            });
+            document.querySelectorAll('.card').forEach(c => c.style.display = c.dataset.nome.includes(s) ? 'block' : 'none');
         }
 
         function openFaq() { document.getElementById('faqModal').style.display = 'flex'; }
         function closeFaq() { document.getElementById('faqModal').style.display = 'none'; }
-        function toggleFaq(el) { const a = el.querySelector('.faq-a'); a.style.display = a.style.display === 'block' ? 'none' : 'block'; }
+        function toggleFaq(el) { 
+            const a = el.querySelector('.faq-a'); 
+            const span = el.querySelector('span');
+            const isOpen = a.style.display === 'block';
+            a.style.display = isOpen ? 'none' : 'block';
+            span.innerText = isOpen ? '+' : '−';
+        }
         function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
         function sendWhatsApp() {
-            let msg = "Olá Club da Bola! Gostaria de fazer um pedido:\n\n";
+            let msg = "Olá Club da Bola! Pedido:\n\n";
             cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.tamanho}\n`);
             window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
         }
-        init();
+        render();
     </script>
 </body>
 </html>
