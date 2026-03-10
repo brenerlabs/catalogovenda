@@ -10,104 +10,107 @@
         :root { --primary: #111; --accent: #25d366; --bg: #fff; --gray: #f4f4f4; }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
         
-        /* HEADER & LOGO */
         header { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
         .logo-area { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .logo-area img { height: 50px; width: auto; object-fit: contain; }
+        .logo-area img { height: 50px; width: auto; }
         .logo-area h1 { font-family: 'Oswald'; font-size: 1.6rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* BUSCA E FILTROS */
         .controls { max-width: 600px; margin: 0 auto 20px; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
-        #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; font-family: 'Inter'; }
+        #searchInput { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; }
         .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; font-size: 0.9rem; cursor: pointer; }
+        select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; font-size: 0.9rem; }
 
-        /* CATEGORIAS CENTRALIZADAS */
-        .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 40px 15px 15px; text-transform: uppercase; text-align: center; color: var(--primary); }
+        .faq-link { text-align: center; color: var(--accent); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin: 15px 0; text-decoration: underline; }
+
+        .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 40px 15px 15px; text-transform: uppercase; text-align: center; }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 15px; }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); max-width: 1200px; margin: 0 auto; } }
 
-        /* SKELETON LOADING */
-        .img-container { aspect-ratio: 1/1; background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton 1.5s infinite; border-radius: 12px; overflow: hidden; margin-bottom: 10px; border: 1px solid #eee; }
+        .img-container { aspect-ratio: 1/1; background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton 1.5s infinite; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
         @keyframes skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.5s; }
         .img-container img.loaded { opacity: 1; }
 
-        .card { cursor: pointer; transition: transform 0.2s; }
-        .card:active { transform: scale(0.98); }
-        .p-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
-        .p-mod { font-size: 0.75rem; color: #777; text-transform: uppercase; }
-        .p-price { font-size: 1.1rem; font-weight: 800; margin-top: 5px; color: var(--primary); }
+        /* MODAL FAQ CENTRALIZADO */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index: 5000; display:none; align-items:center; justify-content:center; padding: 20px; }
+        .modal-faq { background:#fff; width: 100%; max-width: 500px; border-radius: 20px; padding: 30px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .faq-item { border-bottom: 1px solid #eee; padding: 18px 0; cursor: pointer; }
+        .faq-q { font-weight: 700; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; }
+        .faq-a { display: none; padding-top: 12px; color: #666; font-size: 0.9rem; line-height: 1.5; }
 
         /* DRAWER LATERAL */
-        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 2500; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
+        #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 3000; transition: 0.4s ease; display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
-        @media (min-width: 768px) { #productDrawer { width: 450px; } }
+        @media (min-width: 768px) { #productDrawer { width: 450px; border-left: 1px solid #eee; } }
 
-        .swiper-gallery { width: 100%; height: 450px; background: #f9f9f9; }
-        .swiper-slide img { width: 100%; height: 100%; object-fit: contain; }
+        .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .size-btn { border: 1px solid #ddd; padding: 14px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .size-btn.selected { background: #000; color: #fff; }
 
-        .size-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 25px 0; }
-        .size-btn { border: 1px solid #ddd; padding: 14px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s; }
-        .size-btn.selected { background: #000; color: #fff; border-color: #000; }
-
-        /* BARRA DE FRETE */
-        #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        #shippingBar { background: #fff; padding: 15px; border-top: 1px solid #eee; position: sticky; bottom: 0; z-index: 100; }
         .bar-container { background: #eee; height: 8px; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.6s ease-out; }
+        .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.6s; }
 
-        #cartFloat { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: #fff; padding: 16px 28px; border-radius: 40px; display: none; z-index: 1500; font-weight: 800; text-decoration: none; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3); }
+        #cartFloat { position: fixed; bottom: 90px; right: 20px; background: var(--accent); color: #fff; padding: 16px 28px; border-radius: 40px; display: none; z-index: 2000; font-weight: 800; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-area">
-            <img src="logo1.png" alt="Club da Bola" onerror="this.src='https://via.placeholder.com/150x50?text=CLUB+DA+BOLA'">
+            <img src="logo1.png" alt="Club da Bola">
             <h1>Club da Bola</h1>
         </div>
         <div class="controls">
             <input type="text" id="searchInput" placeholder="Qual time você procura?" onkeyup="applyFilters()">
             <div class="select-row">
-                <select id="catFilter" onchange="applyFilters()"><option value="todos">Todas Categorias</option></select>
+                <select id="catFilter" onchange="applyFilters()"><option value="todos">Categorias</option></select>
                 <select id="modelFilter" onchange="applyFilters()">
-                    <option value="todos">Todos Modelos</option>
+                    <option value="todos">Modelos</option>
                     <option value="torcedor">Torcedor</option>
                     <option value="jogador">Jogador</option>
                 </select>
             </div>
         </div>
+        <div class="faq-link" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega? Leia aqui</div>
     </header>
 
     <main id="catalog"></main>
 
+    <div class="modal-overlay" id="faqModal">
+        <div class="modal-faq">
+            <span style="position:absolute; right:25px; top:20px; cursor:pointer; font-size:1.8rem; font-weight:bold;" onclick="closeFaq()">×</span>
+            <h2 style="font-family:'Oswald'; margin-top:0; font-size:1.5rem; text-transform:uppercase;">Dúvidas Frequentes (FAQ)</h2>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">O que é "Tailandesa 1:1 Premium"? <span>+</span></div>
+                <div class="faq-a">É a maior qualidade de réplica disponível. O tecido, bordados, costuras e etiquetas são idênticos aos modelos vendidos nas lojas oficiais.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Qual o prazo de entrega? <span>+</span></div>
+                <div class="faq-a">O prazo médio é de 15 a 25 dias úteis. Após a postagem, você receberá o código de rastreio para acompanhar o pedido.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">Como funciona o Frete Grátis? <span>+</span></div>
+                <div class="faq-a">O frete é grátis para todo o Brasil em qualquer compra que contenha 5 ou mais camisas.</div>
+            </div>
+        </div>
+    </div>
+
     <div id="productDrawer">
         <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
             <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.8rem; cursor:pointer;">✕</button>
-            <span style="font-weight:800; letter-spacing:1px;">DETALHES</span>
+            <span style="font-weight:800;">DETALHES DO PRODUTO</span>
             <div style="width:30px;"></div>
         </div>
-        
         <div style="flex:1; overflow-y:auto;">
             <div class="swiper swiper-gallery">
                 <div class="swiper-wrapper" id="galleryWrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
-
-            <div style="padding:25px;">
-                <div id="drawerInfo"></div>
-                <div style="margin-top:25px; font-weight:800; font-size:0.9rem; text-transform:uppercase;">Selecione o Tamanho:</div>
-                <div class="size-grid">
-                    <div class="size-btn" onclick="selSize(this, 'P')">P</div>
-                    <div class="size-btn" onclick="selSize(this, 'M')">M</div>
-                    <div class="size-btn" onclick="selSize(this, 'G')">G</div>
-                    <div class="size-btn" onclick="selSize(this, 'GG')">GG</div>
-                </div>
-            </div>
+            <div style="padding:25px;" id="drawerContent"></div>
         </div>
-
         <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa; font-size:1rem;" disabled>ESCOLHA O TAMANHO</button>
+            <button id="btnFinal" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#aaa;" disabled>ESCOLHA O TAMANHO</button>
         </div>
     </div>
 
@@ -126,92 +129,63 @@
         let cart = [];
         let gallerySwiper = null;
 
-        // Configuração de Extensões Permitidas
-        const allowedExtensions = /\.(png|jpe?g|webp)$/i;
-
         async function init() {
             try {
                 const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/`);
-                if(!res.ok) throw new Error("Erro na API");
+                if(!res.ok) throw new Error();
                 const cats = await res.json();
                 
                 for (let c of cats) {
                     if (c.type !== 'dir' || c.name.startsWith('.')) continue;
                     const resAnos = await fetch(c.url);
                     const anos = await resAnos.json();
-                    
                     for (let a of anos) {
-                        if (a.type !== 'dir') continue;
                         const resTimes = await fetch(a.url);
                         const times = await resTimes.json();
-                        
-                        let timeTracker = {};
-
+                        let tracker = {};
                         for (let t of times) {
-                            if (t.type !== 'dir') continue;
                             const resMods = await fetch(t.url);
                             const mods = await resMods.json();
-                            
                             for (let m of mods) {
-                                if (m.type !== 'dir') continue;
-                                
-                                // Detecção de Fotos com múltiplas extensões
-                                const resFotos = await fetch(m.url);
-                                const arquivos = await resFotos.json();
-                                const fotosEncontradas = arquivos
-                                    .filter(f => allowedExtensions.test(f.name))
-                                    .map(f => f.path);
+                                const resFiles = await fetch(m.url);
+                                const files = await resFiles.json();
+                                const fotos = files.filter(f => f.name.match(/\.(png|jpe?g|webp)$/i)).map(f => f.path);
+                                if(fotos.length === 0) continue;
 
-                                if(fotosEncontradas.length === 0) continue;
-
-                                let modIdentificado = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
-                                if(timeTracker[t.name] === 'torcedor' && modIdentificado === 'torcedor') {
-                                    modIdentificado = 'jogador';
-                                }
-                                timeTracker[t.name] = modIdentificado;
+                                let mod = m.name.toLowerCase().includes('jogador') ? 'jogador' : 'torcedor';
+                                if(tracker[t.name] === 'torcedor' && mod === 'torcedor') mod = 'jogador';
+                                tracker[t.name] = mod;
 
                                 db.push({
                                     id: Math.random().toString(36).substr(2,9),
-                                    cat: c.name, ano: a.name, nome: t.name,
-                                    mod: modIdentificado,
-                                    path: m.path, 
-                                    fotos: fotosEncontradas,
-                                    preco: modIdentificado === 'jogador' ? 189 : 169
+                                    cat: c.name, ano: a.name, nome: t.name, mod,
+                                    fotos, preco: mod === 'jogador' ? 189 : 169
                                 });
                             }
                         }
                     }
                 }
                 render();
-            } catch (e) { 
-                document.getElementById('catalog').innerHTML = `<p style="text-align:center; padding:50px;">Erro ao carregar catálogo. Verifique se o repositório é público.</p>`;
+            } catch (e) {
+                document.getElementById('catalog').innerHTML = `<p style="text-align:center; padding:50px;">Erro ao carregar. Verifique o Repositório.</p>`;
             }
         }
 
         function render() {
             const catalog = document.getElementById('catalog');
             const selCat = document.getElementById('catFilter');
-            catalog.innerHTML = '';
-            
             const uniqueCats = [...new Set(db.map(p => p.cat))];
+            
             uniqueCats.forEach(c => {
                 selCat.innerHTML += `<option value="${c}">${c}</option>`;
-                catalog.innerHTML += `
-                    <div class="section-group" data-cat="${c}">
-                        <div class="section-title">${c}</div>
-                        <div class="product-grid" id="grid-${c.replace(/\s/g,'')}"></div>
-                    </div>`;
-                
-                const grid = document.getElementById(`grid-${c.replace(/\s/g,'')}`);
+                catalog.innerHTML += `<div class="section-group" data-cat="${c}"><div class="section-title">${c}</div><div class="product-grid" id="grid-${c.replace(/\s/g,'')}"></div></div>`;
                 db.filter(p => p.cat === c).forEach(p => {
-                    grid.innerHTML += `
-                        <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}">
-                            <div class="img-container">
-                                <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')">
-                            </div>
-                            <div class="p-name">Camisa ${p.nome}</div>
-                            <div class="p-mod">Modelo ${p.mod} - ${p.ano}</div>
-                            <div class="p-price">R$ ${p.preco},00</div>
+                    document.getElementById(`grid-${c.replace(/\s/g,'')}`).innerHTML += `
+                        <div class="card" onclick="openDrawer('${p.id}')" data-nome="${p.nome.toLowerCase()}" data-mod="${p.mod}" style="cursor:pointer;">
+                            <div class="img-container"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${p.fotos[0]}" onload="this.classList.add('loaded')"></div>
+                            <div style="font-weight:700; font-size:0.9rem;">Camisa ${p.nome}</div>
+                            <div style="font-size:0.75rem; color:#888; text-transform:uppercase;">Modelo ${p.mod} - ${p.ano}</div>
+                            <div style="font-weight:800; font-size:1.1rem; margin-top:5px;">R$ ${p.preco},00</div>
                         </div>`;
                 });
             });
@@ -219,49 +193,29 @@
 
         function openDrawer(id) {
             const p = db.find(x => x.id === id);
-            const wrapper = document.getElementById('galleryWrapper');
-            
-            wrapper.innerHTML = p.fotos.map(f => `
-                <div class="swiper-slide">
-                    <img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${f}">
-                </div>`).join('');
-
-            document.getElementById('drawerInfo').innerHTML = `
-                <div style="font-size:0.75rem; color:var(--accent); font-weight:800; margin-bottom:5px; text-transform:uppercase;">Tailandesa 1:1 Premium</div>
+            document.getElementById('galleryWrapper').innerHTML = p.fotos.map(f => `<div class="swiper-slide"><img src="https://raw.githubusercontent.com/${USER}/${REPO}/main/${f}" style="width:100%; height:100%; object-fit:contain;"></div>`).join('');
+            document.getElementById('drawerContent').innerHTML = `
+                <div style="color:var(--accent); font-weight:800; font-size:0.7rem; text-transform:uppercase; margin-bottom:5px;">Tailandesa 1:1 Premium</div>
                 <h2 style="font-family:'Oswald'; margin:0; font-size:1.6rem;">${p.nome.toUpperCase()} - ${p.ano}</h2>
-                <div style="color:#777; font-size:0.9rem; margin-top:5px;">Modelo ${p.mod} • Tecido Respirável</div>
-                <div style="margin-top:15px;">
-                    <span style="text-decoration:line-through; color:#bbb; font-size:0.9rem;">R$ ${p.preco + 40},00</span><br>
-                    <span style="font-size:1.8rem; font-weight:900; color:var(--primary);">R$ ${p.preco},00</span>
-                </div>
-            `;
-
+                <div style="color:#777; margin-top:5px;">Modelo ${p.mod} • Alta Performance</div>
+                <div style="margin-top:20px; font-size:1.8rem; font-weight:900;">R$ ${p.preco},00</div>
+                <div style="margin-top:25px; font-weight:800; font-size:0.9rem;">SELECIONE O TAMANHO:</div>
+                <div class="size-grid">${['P','M','G','GG'].map(s => `<div class="size-btn" onclick="selSize(this, '${s}', '${p.id}')">${s}</div>`).join('')}</div>`;
+            
             if(gallerySwiper) gallerySwiper.destroy();
-            gallerySwiper = new Swiper('.swiper-gallery', {
-                pagination: { el: '.swiper-pagination', clickable: true },
-            });
-
+            gallerySwiper = new Swiper('.swiper-gallery', { pagination: { el: '.swiper-pagination' } });
             document.getElementById('productDrawer').classList.add('active');
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-            document.getElementById('btnFinal').disabled = true;
-            document.getElementById('btnFinal').style.background = "#eee";
         }
 
-        let selectedS = null;
-        function selSize(el, s) {
+        function selSize(el, s, id) {
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
-            selectedS = s;
             const btn = document.getElementById('btnFinal');
-            btn.disabled = false;
-            btn.style.background = "var(--primary)";
-            btn.style.color = "#fff";
-            btn.innerText = `ADICIONAR (${s})`;
+            btn.disabled = false; btn.style.background = "#000"; btn.style.color = "#fff"; btn.innerText = `ADICIONAR AO CARRINHO`;
             btn.onclick = () => {
-                const p = db.find(x => x.nome.toUpperCase() === document.querySelector('#drawerInfo h2').innerText.split(' - ')[0]);
+                const p = db.find(x => x.id === id);
                 cart.push({...p, tamanho: s});
-                updateShipping();
-                closeDrawer();
+                updateShipping(); closeDrawer();
             };
         }
 
@@ -271,31 +225,26 @@
             document.getElementById('cartCount').innerText = count;
             const perc = Math.min((count / 5) * 100, 100);
             document.getElementById('barFill').style.width = perc + '%';
-            const text = document.getElementById('shippingText');
-            if(count >= 5) text.innerHTML = "✅ PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS!";
-            else text.innerHTML = `Faltam ${5 - count} camisas para Frete Grátis!`;
+            document.getElementById('shippingText').innerHTML = count >= 5 ? "✅ PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS!" : `Faltam ${5 - count} camisas para Frete Grátis!`;
         }
 
         function applyFilters() {
             const s = document.getElementById('searchInput').value.toLowerCase();
             const m = document.getElementById('modelFilter').value;
-            const c = document.getElementById('catFilter').value;
-            document.querySelectorAll('.card').forEach(card => {
-                const matchName = card.dataset.nome.includes(s);
-                const matchMod = m === 'todos' || card.dataset.mod === m;
-                const matchCat = c === 'todos' || card.closest('.section-group').dataset.cat === c;
-                card.style.display = (matchName && matchMod && matchCat) ? 'block' : 'none';
+            document.querySelectorAll('.card').forEach(c => {
+                c.style.display = (c.dataset.nome.includes(s) && (m === 'todos' || c.dataset.mod === m)) ? 'block' : 'none';
             });
         }
 
+        function openFaq() { document.getElementById('faqModal').style.display = 'flex'; }
+        function closeFaq() { document.getElementById('faqModal').style.display = 'none'; }
+        function toggleFaq(el) { const a = el.querySelector('.faq-a'); a.style.display = a.style.display === 'block' ? 'none' : 'block'; }
+        function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
         function sendWhatsApp() {
-            let msg = "Olá Club da Bola! Gostaria de fazer o seguinte pedido:\n\n";
+            let msg = "Olá Club da Bola! Gostaria de encomendar:\n\n";
             cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.tamanho}\n`);
-            if(cart.length >= 5) msg += "\n🚀 FRETE GRÁTIS APLICADO!";
             window.open(`https://api.whatsapp.com/send?phone=5591993249580&text=${encodeURIComponent(msg)}`);
         }
-
-        function closeDrawer() { document.getElementById('productDrawer').classList.remove('active'); }
         init();
     </script>
 </body>
