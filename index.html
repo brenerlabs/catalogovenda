@@ -21,7 +21,7 @@
         .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         select { padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 0.9rem; }
 
-        /* GRID E CATEGORIAS CENTRALIZADAS */
+        /* GRID E CATEGORIAS */
         .section-title { font-family: 'Oswald'; font-size: 1.3rem; padding: 40px 15px 10px; text-transform: uppercase; text-align: center; width: 100%; }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
@@ -35,7 +35,7 @@
         .price-old { text-decoration: line-through; color: #999; font-size: 0.8rem; margin-right: 5px; }
         .price-new { color: #000; font-weight: 800; font-size: 1rem; }
 
-        /* DRAWER */
+        /* DRAWER (DETALHES) */
         #productDrawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #fff; z-index: 4000; transition: 0.4s ease; display: flex; flex-direction: column; }
         #productDrawer.active { right: 0; }
         @media (min-width: 768px) { #productDrawer { width: 400px; border-left: 1px solid #eee; } }
@@ -51,8 +51,8 @@
         .bar-fill { background: var(--accent); width: 0%; height: 100%; transition: 0.5s; }
 
         .cart-actions { position: fixed; bottom: 85px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 3000; }
-        .btn-cart { background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
-        .btn-clear { background: #ff4444; color: #fff; padding: 10px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-cart { background: var(--accent); color: #fff; padding: 15px 25px; border-radius: 30px; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-clear { background: #ff4444; color: #fff; padding: 10px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -65,7 +65,6 @@
                 <select id="catFilter" onchange="filter()"><option value="todos">Categorias</option></select>
                 <select id="modFilter" onchange="filter()"><option value="todos">Modelos</option></select>
             </div>
-            <div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-top:5px; cursor:pointer;" onclick="openFaq()">Dúvidas sobre Qualidade ou Entrega?</div>
         </div>
     </header>
 
@@ -74,7 +73,7 @@
     <div id="productDrawer">
         <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
             <button onclick="closeDrawer()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-            <span style="font-weight:800; font-size:0.8rem;">DETALHES</span>
+            <span style="font-weight:800; font-size:0.8rem;">DETALHES DO PRODUTO</span>
             <div style="width:20px;"></div>
         </div>
         <div style="flex:1; overflow-y:auto; padding:20px;">
@@ -114,17 +113,27 @@
     <script>
         const REPO = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
         
-        // ESTRUTURA MANUAL: categoria/ano/time/versao/foto1.png
+        // LISTA TOTAL DE TIMES (Sincronizado com suas pastas no GitHub)
         const db = [
-            { id: "1", cat: "Brasileirão", ano: "2025", nome: "Vasco", mod: "Torcedor", fotos: 4 },
-            { id: "2", cat: "Brasileirão", ano: "2025", nome: "Vasco", mod: "Jogador", fotos: 2 },
-            { id: "3", cat: "La Liga", ano: "2025", nome: "Real Madrid", mod: "Jogador", fotos: 5 }
+            { id: "1", cat: "Brasileirão", ano: "2026", nome: "Vasco", mod: "Torcedor", fotos: 2 },
+            { id: "2", cat: "Brasileirão", ano: "2026", nome: "Corinthians", mod: "Torcedor", fotos: 1 },
+            { id: "3", cat: "Brasileirão", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", fotos: 1 },
+            { id: "4", cat: "Brasileirão", ano: "2026", nome: "Flamengo", mod: "Torcedor", fotos: 2 },
+            { id: "5", cat: "Brasileirão", ano: "2026", nome: "Palmeiras", mod: "Torcedor", fotos: 1 },
+            { id: "6", cat: "Brasileirão", ano: "2026", nome: "São Paulo", mod: "Torcedor", fotos: 1 },
+            { id: "7", cat: "La Liga", ano: "2025", nome: "Real Madrid", mod: "Jogador", fotos: 1 },
+            { id: "8", cat: "Seleções", ano: "2024", nome: "Brasil", mod: "Torcedor", fotos: 1 }
         ];
 
         let cart = [];
         let currentItem = null;
         let selectedSize = null;
         let qty = 1;
+
+        // Função para gerar o link da imagem respeitando exatamente as pastas
+        function getImgUrl(p, num) {
+            return `${REPO}${p.cat}/${p.ano}/${p.nome}/${p.mod}/foto${num}.png`;
+        }
 
         function init() {
             const catalog = document.getElementById('catalog');
@@ -140,19 +149,19 @@
             mods.forEach(m => document.getElementById('modFilter').innerHTML += `<option value="${m}">${m}</option>`);
 
             db.forEach(p => {
-                const precoBase = p.mod === "Torcedor" ? {old: 189, new: 169} : {old: 209, new: 189};
-                const path = `${p.cat.toLowerCase().replace(/\s/g,'')}/${p.ano}/${p.nome.toLowerCase().replace(/\s/g,'')}/modelo%20${p.mod.toLowerCase()}/foto1.png`;
+                const preco = p.mod === "Torcedor" ? {old: 189, new: 169} : {old: 209, new: 189};
+                const firstImg = getImgUrl(p, 1);
                 
                 document.getElementById(`grid-${p.cat.replace(/\s/g,'')}`).innerHTML += `
                     <div class="card" onclick="openDrawer('${p.id}')" data-cat="${p.cat}" data-mod="${p.mod}" data-nome="${p.nome.toLowerCase()}">
                         <div class="img-container">
-                            <img src="${REPO}${path}" onload="this.classList.add('loaded')">
+                            <img src="${firstImg}" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/300?text=Sem+Foto'">
                         </div>
-                        <div style="font-weight:700; font-size:0.85rem; margin-top:10px;">${p.nome} ${p.ano}</div>
-                        <div style="font-size:0.75rem; color:#888; margin-bottom:5px;">${p.mod}</div>
+                        <div style="font-weight:700; font-size:0.85rem; margin-top:10px;">Camisa ${p.nome} ${p.ano}</div>
+                        <div style="font-size:0.75rem; color:#888; margin-bottom:5px;">Modelo ${p.mod}</div>
                         <div>
-                            <span class="price-old">R$ ${precoBase.old},00</span>
-                            <span class="price-new">R$ ${precoBase.new},00</span>
+                            <span class="price-old">R$ ${preco.old},00</span>
+                            <span class="price-new">R$ ${preco.new},00</span>
                         </div>
                     </div>`;
             });
@@ -163,21 +172,21 @@
             selectedSize = null;
             qty = 1;
             document.getElementById('qtyVal').innerText = qty;
-            const preco = currentItem.mod === "Torcedor" ? 169 : 189;
+            const precoFinal = currentItem.mod === "Torcedor" ? 169 : 189;
 
-            const slides = [];
+            // Carrega Swiper de fotos dinamicamente
+            let slides = "";
             for(let i=1; i <= currentItem.fotos; i++) {
-                const path = `${currentItem.cat.toLowerCase().replace(/\s/g,'')}/${currentItem.ano}/${currentItem.nome.toLowerCase().replace(/\s/g,'')}/modelo%20${currentItem.mod.toLowerCase()}/foto${i}.png`;
-                slides.push(`<div class="swiper-slide"><img src="${REPO}${path}" style="width:100%; height:100%; object-fit:contain;"></div>`);
+                slides += `<div class="swiper-slide"><img src="${getImgUrl(currentItem, i)}" style="width:100%; aspect-ratio:1/1; object-fit:contain;"></div>`;
             }
             
-            document.getElementById('galleryWrapper').innerHTML = slides.join('');
+            document.getElementById('galleryWrapper').innerHTML = slides;
             document.getElementById('drawerInfo').innerHTML = `
                 <h2 style="font-family:'Oswald'; margin:0; text-align:center;">${currentItem.nome.toUpperCase()}</h2>
                 <p style="text-align:center; color:#888; font-size:0.8rem;">${currentItem.mod} • ${currentItem.ano}</p>
-                <div style="text-align:center; font-size:1.6rem; font-weight:900; margin-bottom:15px;">R$ ${preco},00</div>`;
+                <div style="text-align:center; font-size:1.6rem; font-weight:900; margin-bottom:15px;">R$ ${precoFinal},00</div>`;
 
-            document.getElementById('sizeSelector').innerHTML = ['P','M','G','GG'].map(s => 
+            document.getElementById('sizeSelector').innerHTML = ['P','M','G','GG','XG'].map(s => 
                 `<button class="size-btn" style="padding:12px; border:1px solid #ddd; background:#fff; border-radius:8px; font-weight:700; cursor:pointer;" onclick="selectSize(this, '${s}')">${s}</button>`
             ).join('');
 
