@@ -90,7 +90,7 @@
             <div id="sizeSelector" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px;"></div>
         </div>
         <div style="padding:20px; border-top:1px solid #eee;">
-            <button id="addBtn" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#999;" disabled>SELECIONE O TAMANHO</button>
+            <button id="adtn" style="width:100%; padding:18px; border-radius:10px; border:none; font-weight:800; background:#eee; color:#999;" disabled>SELECIONE O TAMANHO</button>
         </div>
     </div>
 
@@ -116,13 +116,14 @@
         // LISTA TOTAL DE TIMES (Sincronizado com suas pastas no GitHub)
         const db = [
             { id: "1", cat: "Brasileirão", ano: "2026", nome: "Vasco", mod: "Torcedor", fotos: 2 },
-            { id: "2", cat: "Brasileirão", ano: "2026", nome: "Corinthians", mod: "Torcedor", fotos: 1 },
-            { id: "3", cat: "Brasileirão", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", fotos: 1 },
+            { id: "2", cat: "Brasileirão", ano: "2026", nome: "Corinthians", mod: "Torcedor", fotos: 2 },
+            { id: "3", cat: "Brasileirão", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", fotos: 2 },
             { id: "4", cat: "Brasileirão", ano: "2026", nome: "Flamengo", mod: "Torcedor", fotos: 2 },
-            { id: "5", cat: "Brasileirão", ano: "2026", nome: "Palmeiras", mod: "Torcedor", fotos: 1 },
-            { id: "6", cat: "Brasileirão", ano: "2026", nome: "São Paulo", mod: "Torcedor", fotos: 1 },
-            { id: "7", cat: "La Liga", ano: "2025", nome: "Real Madrid", mod: "Jogador", fotos: 1 },
-            { id: "8", cat: "Seleções", ano: "2024", nome: "Brasil", mod: "Torcedor", fotos: 1 }
+            { id: "5", cat: "Brasileirão", ano: "2026", nome: "Palmeiras", mod: "Torcedor", fotos: 2 },
+            { id: "6", cat: "Brasileirão", ano: "2026", nome: "São Paulo", mod: "Torcedor", fotos: 2 },
+            { id: "7", cat: "La Liga", ano: "2026", nome: "Real Madrid", mod: "Jogador", fotos: 2 },
+            { id: "8", cat: "Seleções", ano: "2026", nome: "Brasil", mod: "Torcedor", fotos: 2 }
+            { id: "9", cat: "Premier League", ano: "2026", nome: "Liverpool", mod: "Torcedor", fotos: 2 }
         ];
 
         let cart = [];
@@ -248,3 +249,4 @@
     </script>
 </body>
 </html>
+
