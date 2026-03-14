@@ -18,12 +18,6 @@
         .filter-row { display: flex; gap: 10px; }
         select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; background: var(--gray); font-size: 0.9rem; height: 45px; box-sizing: border-box; }
 
-        .faq-section { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-        .faq-item { border-bottom: 1px solid #eee; }
-        .faq-question { width: 100%; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-weight: 700; font-family: inherit; text-align: left; }
-        .faq-answer { max-height: 0; overflow: hidden; transition: 0.3s; font-size: 0.9rem; color: #666; padding-bottom: 0; }
-        .faq-item.active .faq-answer { max-height: 200px; padding-bottom: 15px; }
-
         .category-title { grid-column: 1 / -1; font-weight: 800; font-size: 1.2rem; padding: 20px 0 10px; border-bottom: 2px solid var(--text); text-transform: uppercase; margin-top: 20px; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px 20px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
@@ -45,18 +39,15 @@
         .qty-selector { display: flex; align-items: center; justify-content: center; gap: 12px; background: var(--gray); padding: 8px; border-radius: 10px; }
         .qty-btn { background: white; border: 1px solid #ddd; width: 30px; height: 30px; border-radius: 50%; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--text); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 950; cursor: pointer; transform: translateY(100%); transition: 0.4s; }
-        .cart-bar.active { transform: translateY(0); }
+        .cart-bar { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; display: none; z-index: 950; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .cart-bar.active { display: block; }
         
         .main-btn { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
         .size-btn { padding: 10px; border: 1px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; }
         .size-btn.selected { background: var(--text); color: white; }
 
-        .cart-item-edit { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .cart-total-footer { padding: 20px; background: var(--gray); border-radius: 12px; margin-top: auto; }
-
         footer { text-align: center; padding: 40px 20px; background: var(--gray); font-size: 0.8rem; color: #666; }
-        .swiper { width: 100%; height: 300px; }
+        .swiper { width: 100%; height: 350px; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
@@ -74,25 +65,10 @@
                 <option value="europeu">Europeu</option>
                 <option value="selecao">Seleções</option>
             </select>
-            <select id="genderFilter" onchange="applyFilters()">
-                <option value="all">Todos os Gêneros</option>
-                <option value="Masculina">Masculina</option>
-                <option value="Feminina">Feminina</option>
-                <option value="Infantil">Infantil</option>
-            </select>
+            <input type="text" id="searchInput" placeholder="Qual time você procura?" oninput="applyFilters()">
         </div>
-        <input type="text" id="searchInput" placeholder="Buscar por time..." oninput="applyFilters()">
     </div>
 </header>
-
-<div class="faq-section">
-    <div class="faq-item">
-        <button class="faq-question" onclick="this.parentElement.classList.toggle('active')">DÚVIDAS FREQUENTES (FAQ) <span>+</span></button>
-        <div class="faq-answer">
-            Enviamos para todo o Brasil. O prazo médio de entrega é de 15 a 25 dias úteis por ser importação direta. Qualidade Tailandesa 1:1 com todos os selos e etiquetas.
-        </div>
-    </div>
-</div>
 
 <main class="grid" id="catalog"></main>
 
@@ -107,11 +83,11 @@
             <div class="swiper-wrapper" id="swiperWrapper"></div>
             <div class="swiper-pagination"></div>
         </div>
-        <h2 id="productTitle" style="margin: 20px 0 5px 0; font-size: 1.1rem;"></h2>
-        <span id="productGender" class="p-gender" style="font-size:0.9rem;"></span>
+        <h2 id="productTitle" style="margin: 20px 0 5px 0; font-size: 1.1rem; text-transform: uppercase;"></h2>
+        <span id="productGender" class="p-gender" style="font-size:0.9rem; display: block; margin-bottom: 10px;"></span>
         <span class="price-new" id="priceNew" style="font-size:1.6rem; display:block; margin: 10px 0;"></span>
         
-        <p style="font-weight:700; font-size:0.8rem;">TAMANHO:</p>
+        <p style="font-weight:700; font-size:0.8rem;">SELECIONE O TAMANHO:</p>
         <div id="sizeGrid" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;">
             <button class="size-btn" onclick="selectSize(this)">P</button>
             <button class="size-btn" onclick="selectSize(this)">M</button>
@@ -127,7 +103,7 @@
             <button class="qty-btn" onclick="updateQty(1)">+</button>
         </div>
 
-        <button class="main-btn" style="background:#000; margin: 20px 0 10px 0;" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
+        <button class="main-btn" style="background:#1a1a1a; margin: 20px 0 10px 0;" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
         <button class="main-btn" onclick="directBuy()">PEDIR AGORA NO WHATSAPP</button>
     </div>
 </div>
@@ -138,85 +114,74 @@
         <span style="font-weight:800;">MEU CARRINHO</span>
         <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); font-size:0.7rem; font-weight:700;">LIMPAR</button>
     </div>
-    <div style="flex: 1; overflow-y: auto; padding: 20px;">
-        <p id="shippingStatus" style="font-size:0.8rem; font-weight:700; text-align:center; color:var(--primary); margin-bottom:15px;"></p>
-        <div id="cartItems"></div>
-    </div>
+    <div id="cartItems" style="flex: 1; overflow-y: auto; padding: 20px;"></div>
     <div style="padding: 20px; border-top: 1px solid #eee;">
-        <div class="cart-total-footer">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:800;">
-                <span>VALOR TOTAL:</span>
-                <span id="cartTotal">R$ 0,00</span>
-            </div>
-            <button class="main-btn" onclick="checkout()">FECHAR PEDIDO NO WHATSAPP</button>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:800;">
+            <span>TOTAL:</span>
+            <span id="cartTotal">R$ 0,00</span>
         </div>
+        <button class="main-btn" onclick="checkout()">FECHAR PEDIDO</button>
     </div>
 </div>
 
 <div class="cart-bar" id="cartBar" onclick="openCart()">
     <span style="font-weight:700;">🛒 CARRINHO (<span id="cartCount">0</span>)</span>
-    <span style="font-weight:700;">VER PEDIDO</span>
 </div>
 
 <footer>
-    <p>© 2026 Club da Bola - Todos os direitos reservados</p>
-    <p>Siga-nos: <a href="https://instagram.com/club.dabola" style="color:var(--text); font-weight:800;">@club.dabola</a></p>
+    <p>© 2026 Club da Bola</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    // BASE_URL terminando na raiz conforme sua estrutura
     const BASE_URL = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
-    const QTY_FOR_FREE_SHIPPING = 3;
 
-    // Banco de dados com nomes padronizados para as pastas
+    // Banco de dados corrigido com base nas suas fotos
     const db = [
-        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 3, cat: "brasileirao", ano: "2026", nome: "Sao Paulo", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 3, cat: "brasileirao", ano: "2026", nome: "Sao Paulo", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
         { id: 5, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
         { id: 6, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 7, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 8, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 9, cat: "europeu", ano: "2026", nome: "Liverpool", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 10, cat: "europeu", ano: "2026", nome: "Roma", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 11, cat: "europeu", ano: "2026", nome: "Manchester City", mod: "fora-jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
-        { id: 12, cat: "selecao", ano: "2024", nome: "Brasil", mod: "fora-jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
-        { id: 13, cat: "selecao", ano: "2024", nome: "Argentina", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 189.00 }
+        { id: 7, cat: "europeu", ano: "2026", nome: "Roma", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 8, cat: "selecao", ano: "2026", nome: "Brasil", mod: "fora-jogador", genero: "Masculina", fotos: 2, preco: 189.00 }
     ];
 
     let cart = [];
     let selectedSize = null;
     let selectedProduct = null;
     let currentQty = 1;
-    let swiper = null;
+    let swiperInstance = null;
 
-    // Função auxiliar para criar caminhos de pastas amigáveis
+    // FUNÇÃO CRÍTICA: Ajustada para o caminho real: masculina/categoria/nome/ano/modelo
     function getProductPath(p) {
         const folderName = p.nome.toLowerCase().replace(/\s+/g, '-');
-        return `${p.cat}/${folderName}/${p.ano}/${p.mod}`;
+        return `masculina/${p.cat}/${folderName}/${p.ano}/${p.mod}`;
     }
 
     function renderCatalog(data) {
         const catalog = document.getElementById('catalog');
         catalog.innerHTML = '';
-        const categories = { "brasileirao": "Brasileirão", "europeu": "Europeu", "selecao": "Seleções" };
+        const cats = { "brasileirao": "Brasileirão", "europeu": "Europa", "selecao": "Seleções" };
 
-        Object.keys(categories).forEach(catKey => {
-            const filtered = data.filter(p => p.cat === catKey).sort((a,b) => a.nome.localeCompare(b.nome));
-            if(filtered.length > 0) {
-                catalog.innerHTML += `<div class="category-title">${categories[catKey]}</div>`;
-                filtered.forEach(p => {
+        Object.keys(cats).forEach(key => {
+            const items = data.filter(p => p.cat === key);
+            if(items.length > 0) {
+                catalog.innerHTML += `<div class="category-title">${cats[key]}</div>`;
+                items.forEach(p => {
                     const path = getProductPath(p);
-                    const img = `${BASE_URL}${path}/foto1.png`;
+                    // Tenta carregar foto1.png, se falhar o HTML onerror (abaixo) tenta .jpg
+                    const imgUrl = `${BASE_URL}${path}/foto1`;
                     catalog.innerHTML += `
                         <div class="card" onclick="openDrawer(${p.id})">
                             <div class="img-container">
-                                <img src="${img}" onerror="this.src='https://placehold.co/400?text=${p.nome}'">
+                                <img src="${imgUrl}.png" onerror="this.onerror=null;this.src='${imgUrl}.jpg';">
                             </div>
                             <div class="p-info">
-                                <span class="p-name">${p.nome} - ${p.mod.replace('-', ' ')}</span>
-                                <span class="p-gender">${p.genero}</span>
+                                <span class="p-name">${p.nome} ${p.ano}</span>
+                                <span class="p-gender">${p.genero} | ${p.mod.split('-')[0]}</span>
                                 <span class="price-new">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
                             </div>
                         </div>`;
@@ -229,8 +194,8 @@
         selectedProduct = db.find(x => x.id === id);
         currentQty = 1; selectedSize = null;
         document.getElementById('qtyVal').innerText = "1";
-        document.getElementById('productTitle').innerText = `Camisa ${selectedProduct.nome} - ${selectedProduct.mod.replace('-', ' ')}`;
-        document.getElementById('productGender').innerText = selectedProduct.genero;
+        document.getElementById('productTitle').innerText = `${selectedProduct.nome} ${selectedProduct.ano} - ${selectedProduct.mod.replace('-', ' ')}`;
+        document.getElementById('productGender').innerText = `${selectedProduct.genero} | OFICIAL`;
         document.getElementById('priceNew').innerText = `R$ ${selectedProduct.preco.toFixed(2).replace('.', ',')}`;
         
         const wrapper = document.getElementById('swiperWrapper');
@@ -238,18 +203,23 @@
         const path = getProductPath(selectedProduct);
 
         for(let i=1; i<=selectedProduct.fotos; i++){
-            const img = `${BASE_URL}${path}/foto${i}.png`;
-            wrapper.innerHTML += `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/400?text=Foto+${i}'"></div>`;
+            const imgUrl = `${BASE_URL}${path}/foto${i}`;
+            wrapper.innerHTML += `
+                <div class="swiper-slide">
+                    <img src="${imgUrl}.png" onerror="this.onerror=null;this.src='${imgUrl}.jpg';">
+                </div>`;
         }
 
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
         document.getElementById('drawer').classList.add('active');
-        if(swiper) swiper.destroy();
-        swiper = new Swiper(".mySwiper", { 
-            pagination: { el: ".swiper-pagination", clickable: true },
-            observer: true,
-            observeParents: true
-        });
+        
+        if(swiperInstance) swiperInstance.destroy();
+        setTimeout(() => {
+            swiperInstance = new Swiper(".mySwiper", { 
+                pagination: { el: ".swiper-pagination" },
+                observer: true, observeParents: true
+            });
+        }, 100);
     }
 
     function selectSize(btn) {
@@ -265,83 +235,54 @@
 
     function addToCart() {
         if(!selectedSize) return alert("Escolha um tamanho!");
-        const cartKey = `${selectedProduct.id}-${selectedSize}`;
-        const existing = cart.find(i => i.cartKey === cartKey);
-        if(existing) existing.qty += currentQty;
-        else cart.push({ cartKey, ...selectedProduct, size: selectedSize, qty: currentQty });
-        updateCartUI();
+        cart.push({ ...selectedProduct, size: selectedSize, qty: currentQty });
+        updateCart();
         closeDrawer('drawer');
         openCart();
     }
 
-    function updateCartItemQty(key, delta) {
-        const item = cart.find(i => i.cartKey === key);
-        if(item) {
-            item.qty = Math.max(1, item.qty + delta);
-            updateCartUI();
-        }
-    }
-
-    function updateCartUI() {
+    function updateCart() {
         const count = cart.reduce((s, i) => s + i.qty, 0);
         const total = cart.reduce((s, i) => s + (i.preco * i.qty), 0);
-        
         document.getElementById('cartCount').innerText = count;
         document.getElementById('cartBar').classList.toggle('active', count > 0);
         document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         
-        const status = count >= QTY_FOR_FREE_SHIPPING ? "🎉 FRETE GRÁTIS ATIVADO!" : `Peça mais ${QTY_FOR_FREE_SHIPPING - count} unidades para Frete Grátis`;
-        document.getElementById('shippingStatus').innerText = status;
-
         const container = document.getElementById('cartItems');
         container.innerHTML = '';
-        cart.forEach(item => {
+        cart.forEach((item, index) => {
             container.innerHTML += `
-                <div style="display:flex; gap:10px; padding:15px 0; border-bottom:1px solid #eee; align-items:center;">
-                    <div style="flex:1;">
-                        <p style="font-weight:700; margin:0; font-size:0.8rem;">${item.nome} - ${item.size}</p>
-                        <p style="margin:5px 0; font-weight:800; color:var(--primary);">R$ ${(item.preco * item.qty).toFixed(2).replace('.', ',')}</p>
-                        <div class="qty-selector" style="justify-content: flex-start; background:none; padding:0;">
-                            <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', -1)">-</button>
-                            <span style="font-size:0.8rem; font-weight:800;">${item.qty}</span>
-                            <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', 1)">+</button>
-                        </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                    <div>
+                        <p style="margin:0; font-weight:700; font-size:0.85rem;">${item.nome} (${item.size})</p>
+                        <p style="margin:0; font-size:0.8rem; color:var(--primary); font-weight:800;">${item.qty}x R$ ${item.preco.toFixed(2)}</p>
                     </div>
-                    <button onclick="removeFromCart('${item.cartKey}')" style="background:none; border:none; color:var(--danger); font-size:1.2rem;">✕</button>
+                    <button onclick="removeItem(${index})" style="background:none; border:none; color:red; font-weight:800;">✕</button>
                 </div>`;
         });
     }
 
-    function removeFromCart(key) { cart = cart.filter(i => i.cartKey !== key); updateCartUI(); }
-    function clearCart() { cart = []; updateCartUI(); closeDrawer('cart-drawer'); }
-    function closeDrawer(id) { document.getElementById(id).classList.remove('active'); }
+    function removeItem(idx) { cart.splice(idx, 1); updateCart(); }
+    function clearCart() { cart = []; updateCart(); closeDrawer('cart-drawer'); }
     function openCart() { document.getElementById('cart-drawer').classList.add('active'); }
+    function closeDrawer(id) { document.getElementById(id).classList.remove('active'); }
 
     function applyFilters() {
         const cat = document.getElementById('catFilter').value;
-        const gender = document.getElementById('genderFilter').value;
         const text = document.getElementById('searchInput').value.toLowerCase();
-        
-        const filtered = db.filter(p => 
-            (cat === 'all' || p.cat === cat) && 
-            (gender === 'all' || p.genero === gender) &&
-            p.nome.toLowerCase().includes(text)
-        );
+        const filtered = db.filter(p => (cat === 'all' || p.cat === cat) && p.nome.toLowerCase().includes(text));
         renderCatalog(filtered);
     }
 
     function checkout() {
-        if(cart.length === 0) return;
         let msg = "*Novo Pedido - Club da Bola*\n\n";
         cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.size} (x${i.qty})\n`);
-        const total = cart.reduce((s, i) => s + (i.preco * i.qty), 0);
-        msg += `\n*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
     function directBuy() {
-        if(!selectedSize) return alert("Escolha um tamanho!");
-        let msg = `*Interesse em:* ${selectedProduct.nome} (${selectedProduct.mod})\nTamanho: ${selectedSize}\nQtd: ${currentQty}`;
+        if(!selectedSize) return alert("Escolha o tamanho");
+        const msg = `Olá! Tenho interesse na camisa do ${selectedProduct.nome} (${selectedProduct.mod}), tamanho ${selectedSize}.`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
