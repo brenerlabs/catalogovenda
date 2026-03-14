@@ -18,14 +18,12 @@
         .filter-row { display: flex; gap: 10px; }
         select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; background: var(--gray); font-size: 0.9rem; height: 45px; box-sizing: border-box; }
 
-        /* FAQ Section */
         .faq-section { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         .faq-item { border-bottom: 1px solid #eee; }
         .faq-question { width: 100%; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; background: none; border: none; cursor: pointer; font-weight: 700; font-family: inherit; text-align: left; }
         .faq-answer { max-height: 0; overflow: hidden; transition: 0.3s; font-size: 0.9rem; color: #666; padding-bottom: 0; }
         .faq-item.active .faq-answer { max-height: 200px; padding-bottom: 15px; }
 
-        /* Grid */
         .category-title { grid-column: 1 / -1; font-weight: 800; font-size: 1.2rem; padding: 20px 0 10px; border-bottom: 2px solid var(--text); text-transform: uppercase; margin-top: 20px; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px 20px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
@@ -39,7 +37,6 @@
         .p-gender { font-size: 0.7rem; color: #888; display: block; margin-bottom: 8px; font-weight: 600; }
         .price-new { color: var(--primary); font-weight: 800; font-size: 1rem; }
 
-        /* Drawers */
         #drawer, #cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: var(--white); z-index: 1000; transition: 0.4s; display: flex; flex-direction: column; }
         #drawer.active, #cart-drawer.active { right: 0; }
         @media (min-width: 768px) { #drawer, #cart-drawer { width: 450px; } }
@@ -59,6 +56,8 @@
         .cart-total-footer { padding: 20px; background: var(--gray); border-radius: 12px; margin-top: auto; }
 
         footer { text-align: center; padding: 40px 20px; background: var(--gray); font-size: 0.8rem; color: #666; }
+        .swiper { width: 100%; height: 300px; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -128,7 +127,7 @@
             <button class="qty-btn" onclick="updateQty(1)">+</button>
         </div>
 
-        <button class="main-btn" style="background:#000; margin-bottom:10px;" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
+        <button class="main-btn" style="background:#000; margin: 20px 0 10px 0;" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
         <button class="main-btn" onclick="directBuy()">PEDIR AGORA NO WHATSAPP</button>
     </div>
 </div>
@@ -169,21 +168,21 @@
     const BASE_URL = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
     const QTY_FOR_FREE_SHIPPING = 3;
 
-    // Atualização de Preços conforme solicitado
+    // Banco de dados com nomes padronizados para as pastas
     const db = [
-        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 5, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 6, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 7, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 8, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 9, cat: "europeu", ano: "2026", nome: "Liverpool", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 10, cat: "europeu", ano: "2026", nome: "Roma", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 11, cat: "europeu", ano: "2026", nome: "Manchester City", mod: "Jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
-        { id: 12, cat: "selecao", ano: "2024", nome: "Brasil", mod: "Jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
-        { id: 13, cat: "selecao", ano: "2024", nome: "Argentina", mod: "Torcedor", genero: "Masculina", fotos: 2, preco: 189.00 }
+        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 3, cat: "brasileirao", ano: "2026", nome: "Sao Paulo", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 5, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 6, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 7, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 8, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 9, cat: "europeu", ano: "2026", nome: "Liverpool", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 10, cat: "europeu", ano: "2026", nome: "Roma", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 11, cat: "europeu", ano: "2026", nome: "Manchester City", mod: "fora-jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
+        { id: 12, cat: "selecao", ano: "2024", nome: "Brasil", mod: "fora-jogador", genero: "Masculina", fotos: 2, preco: 189.00 },
+        { id: 13, cat: "selecao", ano: "2024", nome: "Argentina", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 189.00 }
     ];
 
     let cart = [];
@@ -191,6 +190,12 @@
     let selectedProduct = null;
     let currentQty = 1;
     let swiper = null;
+
+    // Função auxiliar para criar caminhos de pastas amigáveis
+    function getProductPath(p) {
+        const folderName = p.nome.toLowerCase().replace(/\s+/g, '-');
+        return `${p.cat}/${folderName}/${p.ano}/${p.mod}`;
+    }
 
     function renderCatalog(data) {
         const catalog = document.getElementById('catalog');
@@ -202,14 +207,15 @@
             if(filtered.length > 0) {
                 catalog.innerHTML += `<div class="category-title">${categories[catKey]}</div>`;
                 filtered.forEach(p => {
-                    const img = `${BASE_URL}${p.cat}/${p.ano}/${p.nome.replace(/\s+/g, '-').toLowerCase()}/torcedor/foto1.png`;
+                    const path = getProductPath(p);
+                    const img = `${BASE_URL}${path}/foto1.png`;
                     catalog.innerHTML += `
                         <div class="card" onclick="openDrawer(${p.id})">
                             <div class="img-container">
                                 <img src="${img}" onerror="this.src='https://placehold.co/400?text=${p.nome}'">
                             </div>
                             <div class="p-info">
-                                <span class="p-name">Camisa ${p.nome} - ${p.mod}</span>
+                                <span class="p-name">${p.nome} - ${p.mod.replace('-', ' ')}</span>
                                 <span class="p-gender">${p.genero}</span>
                                 <span class="price-new">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
                             </div>
@@ -223,20 +229,27 @@
         selectedProduct = db.find(x => x.id === id);
         currentQty = 1; selectedSize = null;
         document.getElementById('qtyVal').innerText = "1";
-        document.getElementById('productTitle').innerText = `Camisa ${selectedProduct.nome} - ${selectedProduct.mod}`;
+        document.getElementById('productTitle').innerText = `Camisa ${selectedProduct.nome} - ${selectedProduct.mod.replace('-', ' ')}`;
         document.getElementById('productGender').innerText = selectedProduct.genero;
         document.getElementById('priceNew').innerText = `R$ ${selectedProduct.preco.toFixed(2).replace('.', ',')}`;
         
         const wrapper = document.getElementById('swiperWrapper');
         wrapper.innerHTML = '';
+        const path = getProductPath(selectedProduct);
+
         for(let i=1; i<=selectedProduct.fotos; i++){
-            const img = `${BASE_URL}${selectedProduct.cat}/${selectedProduct.ano}/${selectedProduct.nome.replace(/\s+/g, '-').toLowerCase()}/torcedor/foto${i}.png`;
+            const img = `${BASE_URL}${path}/foto${i}.png`;
             wrapper.innerHTML += `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/400?text=Foto+${i}'"></div>`;
         }
+
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
         document.getElementById('drawer').classList.add('active');
         if(swiper) swiper.destroy();
-        swiper = new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination", clickable: true } });
+        swiper = new Swiper(".mySwiper", { 
+            pagination: { el: ".swiper-pagination", clickable: true },
+            observer: true,
+            observeParents: true
+        });
     }
 
     function selectSize(btn) {
@@ -258,21 +271,13 @@
         else cart.push({ cartKey, ...selectedProduct, size: selectedSize, qty: currentQty });
         updateCartUI();
         closeDrawer('drawer');
+        openCart();
     }
 
     function updateCartItemQty(key, delta) {
         const item = cart.find(i => i.cartKey === key);
         if(item) {
             item.qty = Math.max(1, item.qty + delta);
-            updateCartUI();
-        }
-    }
-
-    function updateCartItemSize(key, newSize) {
-        const item = cart.find(i => i.cartKey === key);
-        if(item) {
-            item.size = newSize;
-            item.cartKey = `${item.id}-${newSize}`;
             updateCartUI();
         }
     }
@@ -285,7 +290,6 @@
         document.getElementById('cartBar').classList.toggle('active', count > 0);
         document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         
-        // Regra de Frete baseada em QUANTIDADE
         const status = count >= QTY_FOR_FREE_SHIPPING ? "🎉 FRETE GRÁTIS ATIVADO!" : `Peça mais ${QTY_FOR_FREE_SHIPPING - count} unidades para Frete Grátis`;
         document.getElementById('shippingStatus').innerText = status;
 
@@ -295,21 +299,12 @@
             container.innerHTML += `
                 <div style="display:flex; gap:10px; padding:15px 0; border-bottom:1px solid #eee; align-items:center;">
                     <div style="flex:1;">
-                        <p style="font-weight:700; margin:0; font-size:0.8rem;">${item.nome} - ${item.mod}</p>
-                        <p style="margin:5px 0; font-weight:800; color:var(--primary);">R$ ${(item.preco * item.qty).toFixed(2)}</p>
-                        
-                        <div class="cart-item-edit">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <small>Tam:</small>
-                                <select onchange="updateCartItemSize('${item.cartKey}', this.value)" style="width:60px; padding:2px; height:25px; font-size:0.7rem;">
-                                    ${['P','M','G','GG','XG'].map(s => `<option value="${s}" ${item.size === s ? 'selected' : ''}>${s}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div class="qty-selector" style="justify-content: flex-start; background:none; padding:0;">
-                                <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', -1)">-</button>
-                                <span style="font-size:0.8rem; font-weight:800;">${item.qty}</span>
-                                <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', 1)">+</button>
-                            </div>
+                        <p style="font-weight:700; margin:0; font-size:0.8rem;">${item.nome} - ${item.size}</p>
+                        <p style="margin:5px 0; font-weight:800; color:var(--primary);">R$ ${(item.preco * item.qty).toFixed(2).replace('.', ',')}</p>
+                        <div class="qty-selector" style="justify-content: flex-start; background:none; padding:0;">
+                            <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', -1)">-</button>
+                            <span style="font-size:0.8rem; font-weight:800;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateCartItemQty('${item.cartKey}', 1)">+</button>
                         </div>
                     </div>
                     <button onclick="removeFromCart('${item.cartKey}')" style="background:none; border:none; color:var(--danger); font-size:1.2rem;">✕</button>
@@ -338,15 +333,15 @@
     function checkout() {
         if(cart.length === 0) return;
         let msg = "*Novo Pedido - Club da Bola*\n\n";
-        cart.forEach(i => msg += `• ${i.nome} - Tam: ${i.size} (x${i.qty})\n`);
+        cart.forEach(i => msg += `• ${i.nome} (${i.mod}) - Tam: ${i.size} (x${i.qty})\n`);
         const total = cart.reduce((s, i) => s + (i.preco * i.qty), 0);
-        msg += `\n*TOTAL: R$ ${total.toFixed(2)}*`;
+        msg += `\n*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
     function directBuy() {
         if(!selectedSize) return alert("Escolha um tamanho!");
-        let msg = `*Interesse em:* ${selectedProduct.nome}\nTamanho: ${selectedSize}\nQtd: ${currentQty}`;
+        let msg = `*Interesse em:* ${selectedProduct.nome} (${selectedProduct.mod})\nTamanho: ${selectedSize}\nQtd: ${currentQty}`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
