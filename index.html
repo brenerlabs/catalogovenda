@@ -7,113 +7,168 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #25d366; --text: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; --danger: #ff4444; }
+        :root { --primary: #25d366; --text: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; --danger: #ff4444; --accent: #ffcc00; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background-color: var(--white); color: var(--text); padding-bottom: 100px; }
         
-        /* HEADER E FILTROS */
-        header { padding: 20px; text-align: center; background: var(--white); position: sticky; top: 0; z-index: 900; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo-img { max-width: 160px; height: auto; margin-bottom: 5px; }
-        .filters { display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: 20px auto 0; padding: 0 15px; }
-        .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        select, input { flex: 1; min-width: 140px; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: var(--gray); font-size: 0.85rem; height: 45px; box-sizing: border-box; }
+        .world-cup-timer { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
 
-        /* GRID E CARDS COM HOVER */
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px 15px; max-width: 1200px; margin: 0 auto; }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 25px; } }
+        header { padding: 15px; background: var(--white); position: sticky; top: 0; z-index: 900; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-main { display: flex; align-items: center; gap: 15px; max-width: 1200px; margin: 0 auto; }
+        .logo-img { height: 40px; width: auto; }
+        .search-container { flex: 1; }
+        .search-container input { width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; background: var(--gray); outline: none; font-family: 'Montserrat', sans-serif; }
 
-        .card { background: var(--white); border-radius: 12px; overflow: hidden; cursor: pointer; border: 1px solid #eee; transition: 0.3s; }
-        .img-container { position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #fdfdfd; }
-        .card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-        .card .img-hover { position: absolute; top: 0; left: 0; opacity: 0; }
-        .card:hover .img-main { opacity: 0; transform: scale(1.1); }
-        .card:hover .img-hover { opacity: 1; transform: scale(1.1); }
+        .filters-row { display: flex; gap: 8px; max-width: 1200px; margin: 10px auto 0; overflow-x: auto; padding-bottom: 5px; }
+        .filters-row select { padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.75rem; background: #fff; min-width: 110px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+
+        .category-title { grid-column: 1 / -1; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px; padding-left: 10px; border-left: 4px solid var(--primary); text-transform: uppercase; }
+
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; position: relative; cursor: pointer; }
+        .badge-new { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; }
+        .img-container { position: relative; aspect-ratio: 1/1; background: #fdfdfd; overflow: hidden; }
+        .card .img-primary, .card .img-secondary { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; top: 0; left: 0; }
+        .card .img-secondary { opacity: 0; }
+        .card:hover .img-primary { opacity: 0; transform: scale(1.1); }
+        .card:hover .img-secondary { opacity: 1; transform: scale(1.1); }
         
         .p-info { padding: 12px; text-align: center; }
-        .p-name { font-weight: 700; font-size: 0.85rem; display: block; line-height: 1.3; margin-bottom: 4px; text-transform: uppercase; }
-        .p-gender { font-size: 0.75rem; color: #888; display: block; font-weight: 600; }
-        .price-new { color: var(--primary); font-weight: 800; font-size: 1.1rem; margin-top: 5px; display: block; }
+        .p-name { font-weight: 700; font-size: 0.8rem; display: block; line-height: 1.2; }
+        .p-gen { font-size: 0.65rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 4px; display: block; }
+        .price-old { text-decoration: line-through; color: #999; font-size: 0.75rem; }
+        .price-new { color: var(--primary); font-weight: 800; font-size: 1rem; display: block; margin-top: 2px; }
 
-        /* DRAWERS (DETALHES E CARRINHO) */
         .drawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: var(--white); z-index: 1000; transition: 0.4s; display: flex; flex-direction: column; }
         .drawer.active { right: 0; }
-        @media (min-width: 768px) { .drawer { width: 450px; } }
-        .drawer-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .drawer-content { flex: 1; overflow-y: auto; padding: 20px; }
-
-        /* ELEMENTOS DE INTERAÇÃO */
-        .size-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0; }
-        .size-btn { padding: 10px; border: 1px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; }
-        .size-btn.selected { background: var(--text); color: white; }
+        @media (min-width: 768px) { .drawer { width: 400px; } }
         
-        .qty-selector { display: flex; align-items: center; justify-content: center; gap: 15px; background: var(--gray); padding: 10px; border-radius: 10px; margin-bottom: 20px; }
-        .qty-btn { background: white; border: 1px solid #ddd; width: 32px; height: 32px; border-radius: 50%; font-weight: 800; cursor: pointer; }
+        .swiper-slide { overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff; cursor: zoom-in; }
+        .swiper-slide img { transition: transform 0.3s ease; width: 100%; height: 100%; object-fit: contain; }
+        .swiper-slide:hover img { transform: scale(1.5); }
 
-        .main-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 10px; transition: 0.2s; }
+        .size-btn { padding: 8px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
+        .size-btn.selected { background: var(--text); color: white; }
+
+        .personalization-box { background: var(--gray); padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .personalization-box label { font-size: 0.7rem; font-weight: 700; display: block; margin-bottom: 5px; }
+        .personalization-box input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
+
+        .qty-selector { display: flex; align-items: center; gap: 15px; background: var(--gray); padding: 8px 15px; border-radius: 8px; width: fit-content; margin-top: 10px; }
+        .qty-selector button { background: none; border: none; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
+
+        .shipping-progress-container { background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 15px; }
+        .shipping-text { font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .progress-bg { background: #eee; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: 0.5s; }
+
+        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 8px; }
         .btn-black { background: var(--text); color: white; }
         .btn-green { background: var(--primary); color: white; }
 
-        /* CARRINHO E FRETE */
-        .shipping-progress { background: #eee; border-radius: 10px; height: 12px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { background: var(--primary); height: 100%; transition: 0.5s; width: 0%; }
-        .shipping-text { font-size: 0.75rem; font-weight: 700; }
-        
-        .cart-bar { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 950; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        /* Estilos do Carrinho Atualizados */
+        .cart-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 12px; align-items: center; }
+        .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #f9f9f9; }
+        .cart-info { flex: 1; }
+        .cart-edit-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .cart-size-select { padding: 4px; font-size: 0.7rem; border-radius: 4px; border: 1px solid #ddd; font-family: 'Montserrat'; font-weight: 700; }
 
-        /* FAQ E RODAPÉ */
-        .faq-section { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        .faq-item { border-bottom: 1px solid #eee; cursor: pointer; padding: 15px 0; }
-        .faq-answer { display: none; padding-top: 10px; font-size: 0.85rem; color: #666; line-height: 1.5; }
-        .faq-item.active .faq-answer { display: block; }
-        footer { background: #1a1a1a; color: white; padding: 40px 20px; text-align: center; font-size: 0.85rem; }
+        .faq-section { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+        .faq-answer { display: none; padding-top: 10px; font-size: 0.8rem; color: #666; line-height: 1.5; }
+
+        .cart-bar { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 12px 20px; border-radius: 30px; cursor: pointer; z-index: 950; display: none; }
+        footer { background: #1a1a1a; color: white; padding: 40px 20px; text-align: center; font-size: 0.8rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
 
+<div class="world-cup-timer" id="wcTimer">⚽ CARREGANDO CONTAGEM...</div>
+
 <header>
-    <img src="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/logo1.png" alt="Club da Bola" class="logo-img">
-    <div class="filters">
-        <input type="text" id="searchInput" placeholder="Qual time você procura?" oninput="applyFilters()">
-        <div class="filter-row">
-            <select id="catFilter" onchange="applyFilters()">
-                <option value="all">Todas Categorias</option>
-                <option value="brasileirao">Brasileirão</option>
-                <option value="europeu">Europa</option>
-                <option value="selecao">Seleções</option>
-            </select>
-            <select id="versionFilter" onchange="applyFilters()">
-                <option value="all">Todas Versões</option>
-                <option value="torcedor">Torcedor</option>
-                <option value="jogador">Jogador</option>
-            </select>
-            <select id="genderFilter" onchange="applyFilters()">
-                <option value="all">Gêneros</option>
-                <option value="Masculina">Masculina</option>
-                <option value="Feminina">Feminina</option>
-                <option value="Infantil">Infantil</option>
-            </select>
+    <div class="header-main">
+        <img src="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/logo1.png" alt="Club da Bola" class="logo-img">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar time..." oninput="applyFilters()">
         </div>
+    </div>
+    <div class="filters-row">
+        <select id="catFilter" onchange="applyFilters()">
+            <option value="all">Categorias</option>
+            <option value="brasileirao">Brasileirão</option>
+            <option value="europeu">Europa</option>
+            <option value="selecao">Seleções</option>
+        </select>
+        <select id="versionFilter" onchange="applyFilters()">
+            <option value="all">Versões</option>
+            <option value="torcedor">Torcedor</option>
+            <option value="jogador">Jogador</option>
+        </select>
+        <select id="genderFilter" onchange="applyFilters()">
+            <option value="all">Gêneros</option>
+            <option value="Masculina">Masculina</option>
+            <option value="Feminina">Feminina</option>
+        </select>
     </div>
 </header>
 
 <main class="grid" id="catalog"></main>
 
 <div id="drawer-details" class="drawer">
-    <div class="drawer-header">
-        <button onclick="closeDrawer('drawer-details')" style="background:none; border:none; font-size:1.5rem;">✕</button>
-        <span style="font-weight:800;">DETALHES</span>
-        <div style="width:24px;"></div>
+    <div style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+        <button onclick="closeDrawer('drawer-details')" style="background:none; border:none; font-size:1.2rem;">✕</button>
+        <span style="font-weight:800; font-size: 0.75rem; letter-spacing: 1px;">DETALHES</span>
+        <div style="width:20px;"></div>
     </div>
-    <div class="drawer-content">
-        <div class="swiper mySwiper" style="height: 300px;">
+    <div class="drawer-content" style="padding: 20px; overflow-y: auto; flex: 1;">
+        <div class="swiper mySwiper" style="height: 320px; border-radius: 12px; background: #f9f9f9;">
             <div class="swiper-wrapper" id="swiperWrapper"></div>
             <div class="swiper-pagination"></div>
+            <div class="swiper-button-next" style="color:#000; transform: scale(0.5);"></div>
+            <div class="swiper-button-prev" style="color:#000; transform: scale(0.5);"></div>
         </div>
-        <h2 id="detTitle" style="font-size: 1.1rem; margin: 20px 0 5px;"></h2>
-        <span id="detGender" class="p-gender" style="margin-bottom: 15px; display:block;"></span>
-        <span id="detPrice" class="price-new" style="font-size: 1.6rem; margin-bottom: 20px;"></span>
+        
+        <h2 id="detTitle" style="font-size: 1.1rem; margin: 20px 0 2px;"></h2>
+        <span id="detGen" class="p-gen" style="margin-bottom: 10px;"></span>
+        
+        <div id="jogadorWarning"></div> 
 
-        <p style="font-weight:700; font-size:0.8rem;">SELECIONE O TAMANHO:</p>
-        <div class="size-grid">
+        <div style="margin-top:10px;">
+            <span id="detPriceOld" class="price-old"></span>
+            <span id="detPrice" class="price-new" style="font-size: 1.5rem;"></span>
+        </div>
+        <span style="font-size: 0.7rem; color: #666; display: block; margin-top: 5px;">A partir de 3 peças parcelamos em até 3x s/ juros</span>
+
+        <div class="personalization-box">
+            <p style="font-weight:800; font-size:0.7rem; margin:0 0 10px 0;">QUER PERSONALIZAR? (+ R$ 25,00)</p>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <label style="display:flex; align-items:center; gap:5px; margin:0;">
+                    <input type="radio" name="perso-opt" value="sim" onchange="togglePersoFields(true)"> Sim
+                </label>
+                <label style="display:flex; align-items:center; gap:5px; margin:0;">
+                    <input type="radio" name="perso-opt" value="nao" checked onchange="togglePersoFields(false)"> Não
+                </label>
+            </div>
+            <div id="perso-fields" style="display:none;">
+                <label>NOME:</label>
+                <input type="text" id="perso-nome" placeholder="Ex: NEYMAR JR" maxlength="20">
+                <label>NÚMERO (Máx 2):</label>
+                <input type="number" id="perso-numero" placeholder="10" oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2)">
+            </div>
+        </div>
+
+        <p style="font-weight:700; font-size:0.7rem; margin-top: 15px; margin-bottom: 8px;">QUANTIDADE:</p>
+        <div class="qty-selector">
+            <button onclick="updateDetQty(-1)">-</button>
+            <span id="detQty" style="font-weight: 700;">1</span>
+            <button onclick="updateDetQty(1)">+</button>
+        </div>
+
+        <p style="font-weight:700; font-size:0.7rem; margin-top: 15px; margin-bottom: 8px;">TAMANHO:</p>
+        <div class="size-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;">
             <button class="size-btn" onclick="selectSize(this)">P</button>
             <button class="size-btn" onclick="selectSize(this)">M</button>
             <button class="size-btn" onclick="selectSize(this)">G</button>
@@ -121,79 +176,89 @@
             <button class="size-btn" onclick="selectSize(this)">XG</button>
         </div>
 
-        <p style="font-weight:700; font-size:0.8rem;">QUANTIDADE:</p>
-        <div class="qty-selector">
-            <button class="qty-btn" onclick="updateDetQty(-1)">-</button>
-            <span id="detQty" style="font-weight:800;">1</span>
-            <button class="qty-btn" onclick="updateDetQty(1)">+</button>
-        </div>
-
-        <button class="main-btn btn-black" onclick="addToCart()">ADICIONAR AO CARRINHO</button>
-        <button class="main-btn btn-green" onclick="directBuy()">PEDIR AGORA</button>
+        <button class="main-btn btn-black" onclick="addToCart()" style="margin-top: 20px;">ADICIONAR AO CARRINHO</button>
+        <button class="main-btn btn-green" onclick="directBuy()">COMPRAR AGORA</button>
     </div>
 </div>
 
 <div id="drawer-cart" class="drawer">
-    <div class="drawer-header">
-        <button onclick="closeDrawer('drawer-cart')" style="background:none; border:none; font-size:1.5rem;">✕</button>
+    <div style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+        <button onclick="closeDrawer('drawer-cart')" style="background:none; border:none; font-size:1.2rem;">✕</button>
         <span style="font-weight:800;">MEU CARRINHO</span>
-        <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); font-weight:700; font-size:0.75rem;">LIMPAR</button>
+        <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); font-size:0.7rem; font-weight:700;">LIMPAR</button>
     </div>
     
-    <div style="padding: 15px; background: #fff9e6; border-bottom: 1px solid #ffeeba;">
-        <span id="shippingMsg" class="shipping-text"></span>
-        <div class="shipping-progress"><div id="progressBar" class="progress-bar"></div></div>
-    </div>
+    <div id="cartItemsList" style="flex: 1; overflow-y: auto;"></div>
 
-    <div id="cartItemsList" class="drawer-content"></div>
-    
-    <div style="padding: 20px; border-top: 1px solid #eee;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:800; font-size:1.1rem;">
+    <div style="padding: 20px; background: #fafafa; border-top: 1px solid #eee;">
+        <div class="shipping-progress-container">
+            <div class="shipping-text" id="shippingText">Faltam 5 peças para FRETE GRÁTIS 🔥</div>
+            <div class="progress-bg">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#666; margin-bottom: 5px;">
+            <span>Qtd. de itens:</span>
+            <span id="cartQtyTotal">0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.2rem; margin-bottom: 15px;">
             <span>TOTAL:</span>
             <span id="cartTotal">R$ 0,00</span>
         </div>
-        <button class="main-btn btn-green" onclick="checkout()">FECHAR PEDIDO NO WHATSAPP</button>
+        <button class="main-btn btn-green" onclick="checkout()">FINALIZAR NO WHATSAPP</button>
+    </div>
+</div>
+
+<div class="faq-section">
+    <h3 style="text-align:center; margin-bottom:20px;">DÚVIDAS FREQUENTES</h3>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Qual o prazo de entrega? <span>+</span></div>
+        <div class="faq-answer">O prazo médio é de 15 a 25 dias úteis, pois nossos produtos são importados sob encomenda.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">As camisas são originais? <span>+</span></div>
+        <div class="faq-answer">Trabalhamos com réplicas tailandesas 1:1 (Padrão A), a melhor qualidade do mercado, com todos os selos e tecidos idênticos aos oficiais.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Posso personalizar? <span>+</span></div>
+        <div class="faq-answer">Sim! Nome e número são personalizados após a confirmação do pedido no WhatsApp. Cobramos uma taxa de R$ 25,00.</div>
     </div>
 </div>
 
 <div class="cart-bar" id="cartBar" onclick="openCart()">
-    <span style="font-weight:700;">🛒 MEU CARRINHO (<span id="cartCount">0</span>)</span>
+    <span style="font-weight:700; font-size: 0.85rem;">🛒 CARRINHO (<span id="cartCount">0</span>)</span>
 </div>
 
-<section class="faq-section">
-    <h3 style="text-align:center; margin-bottom:20px;">DÚVIDAS FREQUENTES</h3>
-    <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div style="display:flex; justify-content:space-between; font-weight:700;">Qual o prazo de entrega? <span>+</span></div>
-        <div class="faq-answer">O prazo médio é de 15 a 25 dias úteis, pois os produtos são importados sob encomenda.</div>
-    </div>
-    <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div style="display:flex; justify-content:space-between; font-weight:700;">As camisas são originais? <span>+</span></div>
-        <div class="faq-answer">Trabalhamos com qualidade Tailandesa 1:1, a melhor disponível no mercado mundial.</div>
-    </div>
-</section>
-
 <footer>
-    <div style="margin-bottom: 15px;">
-        <a href="https://instagram.com/club.dabola" style="color:var(--primary); text-decoration:none; font-weight:700;">INSTAGRAM</a>
-    </div>
-    <address style="font-style: normal; color: #bbb;">
-        📍 São Luís - MA e Paragominas - PA
-    </address>
-    <p style="margin-top:20px; opacity:0.6;">© 2026 Club da Bola - Todos os direitos reservados.</p>
+    <p>📍 São Luís - MA | Paragominas - PA<br>Siga-nos: <a href="https://instagram.com/club.dabola" target="_blank">@club.dabola</a></p>
+    <p style="opacity:0.5; font-size: 0.65rem; margin-top: 20px;">
+        © 2026 Club da Bola. Todos os direitos reservados.
+    </p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     const BASE_URL = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
     
+    function updateCountdown() {
+        const cupDate = new Date("June 8, 2026 00:00:00").getTime();
+        const now = new Date().getTime();
+        const diff = cupDate - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('wcTimer').innerText = `⚽ FALTA ${days} DIAS PARA A COPA DO MUNDO 2026`;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 86400000);
+
     const db = [
-        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "casa-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 5, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 6, cat: "brasileirao", ano: "2026", nome: "Cuzeiro", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
-        { id: 7, cat: "europeu", ano: "2026", nome: "Roma", mod: "fora-torcedor", genero: "Masculina", fotos: 2, preco: 169.00 },
+        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", genero: "Masculina", fotos: 2 },
+        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Torcedor", genero: "Masculina", fotos: 2 },
+        { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "Torcedor", genero: "Masculina", fotos: 2 },
+        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Torcedor", genero: "Masculina", fotos: 2 },
+        { id: 5, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "Torcedor", genero: "Masculina", fotos: 2 },
+        { id: 6, cat: "europeu", ano: "2025", nome: "Real Madrid", mod: "Jogador", genero: "Masculina", fotos: 2 },
+        { id: 7, cat: "selecao", ano: "2026", nome: "Brasil", mod: "Jogador", genero: "Masculina", fotos: 2 }
     ];
 
     let cart = [];
@@ -202,48 +267,100 @@
     let detQty = 1;
     let swiper = null;
 
-    function getPath(p) { return `masculina/${p.cat}/${p.nome.toLowerCase().replace(/\s+/g, '-')}/${p.ano}/${p.mod}`; }
-    function formatTitle(p) { return `Camisa ${p.nome} ${p.mod.includes('torcedor') ? 'Torcedor' : 'Jogador'} - ${p.ano}`; }
+    function getPrice(p) {
+        const mod = p.mod.toLowerCase();
+        const cat = p.cat.toLowerCase();
+        if (mod === "jogador" || cat === "selecao") {
+            return { old: 209.00, current: 189.99 };
+        } else {
+            return { old: 189.00, current: 169.00 };
+        }
+    }
+
+    function slugify(text) { return text.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, ''); }
+    function formatMoney(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    
+    function getPath(p) { 
+        const versaoLink = p.mod.toLowerCase();
+        return `masculina/${p.cat}/${slugify(p.nome)}/${p.ano}/casa-${versaoLink}`; 
+    }
+
+    function togglePersoFields(show) {
+        document.getElementById('perso-fields').style.display = show ? 'block' : 'none';
+        updateDetPriceDisplay();
+    }
+
+    function updateDetPriceDisplay() {
+        if (!selectedDetProduct) return;
+        const priceObj = getPrice(selectedDetProduct);
+        let base = priceObj.current;
+        const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
+        const final = isPerso ? base + 25 : base;
+        document.getElementById('detPrice').innerText = formatMoney(final);
+    }
 
     function renderCatalog(data) {
         const catalog = document.getElementById('catalog');
         catalog.innerHTML = '';
-        data.forEach(p => {
-            const path = getPath(p);
-            catalog.innerHTML += `
-                <div class="card" onclick="openDet(${p.id})">
-                    <div class="img-container">
-                        <img src="${BASE_URL}${path}/foto1.png" class="img-main" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
-                        <img src="${BASE_URL}${path}/foto2.png" class="img-hover" onerror="this.src='${BASE_URL}${path}/foto2.jpg'">
-                    </div>
-                    <div class="p-info">
-                        <span class="p-name">${formatTitle(p)}</span>
-                        <span class="p-gender">${p.genero}</span>
-                        <span class="price-new">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
-                    </div>
-                </div>`;
+        const cats = [...new Set(data.map(p => p.cat))];
+        cats.forEach(c => {
+            const products = data.filter(p => p.cat === c);
+            const displayTitle = c === "brasileirao" ? "BRASILEIRÃO" : c === "europeu" ? "EUROPA" : "SELEÇÕES";
+            catalog.innerHTML += `<h2 class="category-title">${displayTitle}</h2>`;
+            products.forEach(p => {
+                const path = getPath(p);
+                const prices = getPrice(p);
+                catalog.innerHTML += `
+                    <div class="card" onclick="openDet(${p.id})">
+                        ${p.ano === "2026" ? '<div class="badge-new">Lançamento</div>' : ''}
+                        <div class="img-container">
+                            <img class="img-primary" src="${BASE_URL}${path}/foto1.png" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
+                            <img class="img-secondary" src="${BASE_URL}${path}/foto2.png" onerror="this.src='${BASE_URL}${path}/foto2.jpg'">
+                        </div>
+                        <div class="p-info">
+                            <span class="p-name">Camisa ${p.nome} Versão ${p.mod} - ${p.ano}</span>
+                            <span class="p-gen">${p.genero}</span>
+                            <span class="price-old">${formatMoney(prices.old)}</span>
+                            <span class="price-new">${formatMoney(prices.current)}</span>
+                        </div>
+                    </div>`;
+            });
         });
     }
 
     function openDet(id) {
         selectedDetProduct = db.find(x => x.id === id);
-        detQty = 1; selectedSize = null;
-        document.getElementById('detQty').innerText = 1;
-        document.getElementById('detTitle').innerText = formatTitle(selectedDetProduct);
-        document.getElementById('detGender').innerText = selectedDetProduct.genero + " | OFICIAL";
-        document.getElementById('detPrice').innerText = "R$ " + selectedDetProduct.preco.toFixed(2).replace('.', ',');
-        
+        selectedSize = null;
+        detQty = 1;
+        document.querySelector('input[name="perso-opt"][value="nao"]').checked = true;
+        document.getElementById('perso-fields').style.display = 'none';
+        document.getElementById('perso-nome').value = '';
+        document.getElementById('perso-numero').value = '';
+        document.getElementById('detQty').innerText = detQty;
+        document.getElementById('detTitle').innerText = `Camisa ${selectedDetProduct.nome} Versão ${selectedDetProduct.mod} - ${selectedDetProduct.ano}`;
+        document.getElementById('detGen').innerText = selectedDetProduct.genero;
+        const prices = getPrice(selectedDetProduct);
+        document.getElementById('detPriceOld').innerText = formatMoney(prices.old);
+        document.getElementById('detPrice').innerText = formatMoney(prices.current);
+        const warningDiv = document.getElementById('jogadorWarning');
+        const isJogador = selectedDetProduct.mod.toLowerCase().includes('jogador');
+        warningDiv.innerHTML = isJogador ? `<p style="color:red; font-size:0.7rem; font-weight:800; margin:10px 0;">⚠️ MODELAGEM JUSTA: A versão jogador possui corte atlético, recomendamos um tamanho maior que o habitual.</p>` : '';
         const wrapper = document.getElementById('swiperWrapper');
         wrapper.innerHTML = '';
+        const path = getPath(selectedDetProduct);
         for(let i=1; i<=selectedDetProduct.fotos; i++) {
-            const img = `${BASE_URL}${getPath(selectedDetProduct)}/foto${i}`;
-            wrapper.innerHTML += `<div class="swiper-slide"><img src="${img}.png" style="width:100%" onerror="this.src='${img}.jpg'"></div>`;
+            wrapper.innerHTML += `<div class="swiper-slide"><img src="${BASE_URL}${path}/foto${i}.png" onerror="this.src='${BASE_URL}${path}/foto${i}.jpg'"></div>`;
         }
-
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
         document.getElementById('drawer-details').classList.add('active');
         if(swiper) swiper.destroy();
-        setTimeout(() => { swiper = new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination" } }); }, 100);
+        setTimeout(() => { swiper = new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }, loop: true }); }, 100);
+    }
+
+    function updateDetQty(v) {
+        detQty += v;
+        if(detQty < 1) detQty = 1;
+        document.getElementById('detQty').innerText = detQty;
     }
 
     function selectSize(btn) {
@@ -252,11 +369,31 @@
         btn.classList.add('selected');
     }
 
-    function updateDetQty(v) { detQty = Math.max(1, detQty + v); document.getElementById('detQty').innerText = detQty; }
-
     function addToCart() {
-        if(!selectedSize) return alert("Por favor, selecione um tamanho!");
-        cart.push({ ...selectedDetProduct, size: selectedSize, qty: detQty });
+        if(!selectedSize) return alert("Escolha o tamanho!");
+        const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
+        const pNome = document.getElementById('perso-nome').value.toUpperCase();
+        const pNum = document.getElementById('perso-numero').value;
+        if(isPerso && (!pNome || !pNum)) return alert("Preencha o nome e número para personalizar!");
+        const basePrice = getPrice(selectedDetProduct).current;
+        const finalPrice = isPerso ? basePrice + 25 : basePrice;
+
+        // Chave única inclui personalização para não agrupar camisas com nomes diferentes
+        const itemKey = `${selectedDetProduct.id}-${selectedSize}-${isPerso ? pNome+pNum : 'no'}`;
+        const existing = cart.find(i => i.cartKey === itemKey);
+
+        if(existing) {
+            existing.qty += detQty;
+        } else {
+            cart.push({ 
+                ...selectedDetProduct, 
+                cartKey: itemKey,
+                size: selectedSize, 
+                qty: detQty, 
+                preco: finalPrice,
+                perso: isPerso ? { nome: pNome, num: pNum } : null
+            });
+        }
         updateCart();
         closeDrawer('drawer-details');
         openCart();
@@ -265,78 +402,106 @@
     function updateCart() {
         const count = cart.reduce((s, i) => s + i.qty, 0);
         const total = cart.reduce((s, i) => s + (i.preco * i.qty), 0);
-        
-        // Regra Frete Grátis
-        const bar = document.getElementById('progressBar');
-        const msg = document.getElementById('shippingMsg');
-        if(count >= 5) {
-            bar.style.width = "100%";
-            msg.innerHTML = "🚚 PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS! 🔥";
-        } else {
-            bar.style.width = (count / 5 * 100) + "%";
-            msg.innerHTML = `🛒 Faltam ${5 - count} peças para FRETE GRÁTIS!`;
-        }
-
+        const progressBar = document.getElementById('progressBar');
+        const shippingText = document.getElementById('shippingText');
+        const progress = Math.min((count / 5) * 100, 100);
+        progressBar.style.width = progress + "%";
+        shippingText.innerHTML = count >= 5 ? `PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS 🛒💨` : `Falta ${5 - count} peças para FRETE GRÁTIS 🔥`;
         document.getElementById('cartCount').innerText = count;
+        document.getElementById('cartQtyTotal').innerText = count;
+        document.getElementById('cartTotal').innerText = formatMoney(total);
         document.getElementById('cartBar').style.display = count > 0 ? 'block' : 'none';
-        document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
 
         const container = document.getElementById('cartItemsList');
-        container.innerHTML = '';
-        cart.forEach((item, idx) => {
-            container.innerHTML += `
-                <div style="margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.85rem; margin-bottom:10px;">
-                        <span>${item.nome} (${item.size})</span>
-                        <button onclick="remove(${idx})" style="color:red; border:none; background:none; cursor:pointer;">✕</button>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <select onchange="editSize(${idx}, this.value)" style="padding:5px; border-radius:5px;">
-                            ${['P','M','G','GG','XG'].map(s => `<option ${item.size==s?'selected':''}>${s}</option>`).join('')}
+        container.innerHTML = cart.map((item, idx) => {
+            const path = getPath(item);
+            return `
+            <div class="cart-item">
+                <img class="cart-img" src="${BASE_URL}${path}/foto1.png" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
+                <div class="cart-info">
+                    <div style="font-weight:700; font-size:0.8rem; line-height:1.2;">${item.nome} ${item.mod} ${item.ano}</div>
+                    ${item.perso ? `<div style="font-size:0.6rem; color:var(--primary); font-weight:800;">PERSONALIZADA: ${item.perso.nome} (${item.perso.num})</div>` : ''}
+                    
+                    <div class="cart-edit-row">
+                        <select class="cart-size-select" onchange="editSize(${idx}, this.value)">
+                            <option value="P" ${item.size === 'P' ? 'selected' : ''}>P</option>
+                            <option value="M" ${item.size === 'M' ? 'selected' : ''}>M</option>
+                            <option value="G" ${item.size === 'G' ? 'selected' : ''}>G</option>
+                            <option value="GG" ${item.size === 'GG' ? 'selected' : ''}>GG</option>
+                            <option value="XG" ${item.size === 'XG' ? 'selected' : ''}>XG</option>
                         </select>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <button onclick="editQty(${idx},-1)" class="qty-btn" style="width:24px; height:24px;">-</button>
-                            <span style="font-weight:700;">${item.qty}</span>
-                            <button onclick="editQty(${idx},1)" class="qty-btn" style="width:24px; height:24px;">+</button>
+
+                        <div style="display:flex; gap:10px; align-items:center; background:#eee; padding:3px 8px; border-radius:15px;">
+                            <button onclick="editQty(${idx},-1)" style="border:none;background:none;font-weight:800;cursor:pointer;">-</button>
+                            <span style="font-size:0.75rem; font-weight:700;">${item.qty}</span>
+                            <button onclick="editQty(${idx},1)" style="border:none;background:none;font-weight:800;cursor:pointer;">+</button>
                         </div>
-                        <span style="margin-left:auto; font-weight:800; color:var(--primary);">R$ ${(item.preco*item.qty).toFixed(2)}</span>
                     </div>
-                </div>`;
-        });
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:800; color:var(--primary); font-size:0.85rem;">${formatMoney(item.preco * item.qty)}</div>
+                    <button onclick="editQty(${idx}, -${item.qty})" style="border:none; background:none; color:red; font-size:0.6rem; cursor:pointer; margin-top:5px;">Remover</button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
-    function editQty(idx, v) { cart[idx].qty = Math.max(1, cart[idx].qty + v); updateCart(); }
-    function editSize(idx, s) { cart[idx].size = s; updateCart(); }
-    function remove(idx) { cart.splice(idx, 1); updateCart(); }
-    function clearCart() { if(confirm("Esvaziar carrinho?")) { cart = []; updateCart(); closeDrawer('drawer-cart'); } }
-    
+    function editQty(idx, v) { 
+        cart[idx].qty += v; 
+        if(cart[idx].qty < 1) cart.splice(idx, 1); 
+        updateCart(); 
+    }
+
+    function editSize(idx, newSize) {
+        cart[idx].size = newSize;
+        // Atualizamos a cartKey para refletir o novo tamanho
+        const item = cart[idx];
+        item.cartKey = `${item.id}-${newSize}-${item.perso ? item.perso.nome+item.perso.num : 'no'}`;
+        updateCart();
+    }
+
+    function clearCart() { if(confirm("Limpar carrinho?")) { cart = []; updateCart(); closeDrawer('drawer-cart'); } }
     function openCart() { document.getElementById('drawer-cart').classList.add('active'); }
     function closeDrawer(id) { document.getElementById(id).classList.remove('active'); }
 
+    function toggleFaq(el) {
+        const answer = el.nextElementSibling;
+        const span = el.querySelector('span');
+        const isOpen = answer.style.display === "block";
+        answer.style.display = isOpen ? "none" : "block";
+        span.innerText = isOpen ? "+" : "-";
+    }
+
     function applyFilters() {
-        const text = document.getElementById('searchInput').value.toLowerCase();
+        const q = slugify(document.getElementById('searchInput').value);
         const cat = document.getElementById('catFilter').value;
         const ver = document.getElementById('versionFilter').value;
         const gen = document.getElementById('genderFilter').value;
-
-        const filtered = db.filter(p => {
-            return (cat === 'all' || p.cat === cat) &&
-                   (ver === 'all' || p.mod.includes(ver)) &&
-                   (gen === 'all' || p.genero === gen) &&
-                   p.nome.toLowerCase().includes(text);
-        });
+        const filtered = db.filter(p => slugify(p.nome).includes(q) && (cat==='all' || p.cat===cat) && (ver==='all' || p.mod.toLowerCase() === ver) && (gen==='all' || p.genero===gen));
         renderCatalog(filtered);
     }
 
     function checkout() {
+        if(cart.length === 0) return alert("Carrinho vazio!");
         let msg = "*Novo Pedido - Club da Bola*\n\n";
-        cart.forEach(i => msg += `• ${formatTitle(i)} - Tam: ${i.size} (x${i.qty})\n`);
+        cart.forEach(i => {
+            msg += `• ${i.nome} (${i.size}) x${i.qty}`;
+            if(i.perso) msg += ` [Perso: ${i.perso.nome}, ${i.perso.num}]`;
+            msg += ` - ${formatMoney(i.preco * i.qty)}\n`;
+        });
+        msg += `\n*VALOR TOTAL: ${document.getElementById('cartTotal').innerText}*`;
+        if(cart.reduce((s,i)=>s+i.qty, 0) >= 5) msg += `\n*FRETE GRÁTIS APLICADO!* 📦✅`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
     function directBuy() {
-        if(!selectedSize) return alert("Escolha o tamanho primeiro!");
-        const msg = `Olá! Quero pedir a ${formatTitle(selectedDetProduct)}, tamanho ${selectedSize}.`;
+        if(!selectedSize) return alert("Escolha o tamanho!");
+        const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
+        const pNome = document.getElementById('perso-nome').value.toUpperCase();
+        const pNum = document.getElementById('perso-numero').value;
+        let msg = `Olá! Gostaria de comprar a Camisa ${selectedDetProduct.nome} Versão ${selectedDetProduct.mod} (${selectedDetProduct.genero}) no tamanho ${selectedSize}.`;
+        if(isPerso) msg += ` Com personalização: ${pNome}, número ${pNum}.`;
+        msg += ` Quantidade: ${detQty}`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
