@@ -67,7 +67,6 @@
         .btn-black { background: var(--text); color: white; }
         .btn-green { background: var(--primary); color: white; }
 
-        /* Estilos do Carrinho Atualizados */
         .cart-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 12px; align-items: center; }
         .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #f9f9f9; }
         .cart-info { flex: 1; }
@@ -251,21 +250,21 @@
     updateCountdown();
     setInterval(updateCountdown, 86400000);
 
+    // DB ATUALIZADO: "tipo" alterado de casa/fora para I/II
     const db = [
-        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", genero: "Masculina", fotos: 2 },
-        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Torcedor", genero: "Masculina", fotos: 2 },
-        { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "Torcedor", genero: "Masculina", fotos: 2 },
-        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Torcedor", genero: "Masculina", fotos: 2 },
-        { id: 5, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "Torcedor", genero: "Masculina", fotos: 2 },
-        { id: 6, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 7, cat: "selecao", ano: "2026", nome: "Brasil", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 8, cat: "selecao", ano: "2026", nome: "Argentina", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 9, cat: "selecao", ano: "2026", nome: "Portugal", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 10, cat: "selecao", ano: "2026", nome: "Espanha", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 11, cat: "selecao", ano: "2026", nome: "Inglaterra", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 12, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Jogador", genero: "Masculina", fotos: 2 },
-        { id: 13, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Jogador", genero: "Masculina", fotos: 2 }
-        
+        { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 14, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
+        { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 15, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 5, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
+        { id: 6, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 7, cat: "selecao", ano: "2026", nome: "Brasil", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 8, cat: "selecao", ano: "2026", nome: "Argentina", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 9, cat: "selecao", ano: "2026", nome: "Portugal", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 10, cat: "selecao", ano: "2026", nome: "Espanha", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+        { id: 11, cat: "selecao", ano: "2026", nome: "Inglaterra", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 }
     ];
 
     let cart = [];
@@ -287,9 +286,12 @@
     function slugify(text) { return text.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, ''); }
     function formatMoney(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
     
+    // LOGICA DE PASTA: Converte I em casa e II em fora para manter compatibilidade com as pastas do GitHub
     function getPath(p) { 
+        const generoLink = p.genero.toLowerCase();
         const versaoLink = p.mod.toLowerCase();
-        return `masculina/${p.cat}/${slugify(p.nome)}/${p.ano}/casa-${versaoLink}`; 
+        const modeloLink = p.tipo === "I" ? "casa" : "fora";
+        return `${generoLink}/${p.cat}/${slugify(p.nome)}/${p.ano}/${modeloLink}-${versaoLink}`; 
     }
 
     function togglePersoFields(show) {
@@ -325,8 +327,8 @@
                             <img class="img-secondary" src="${BASE_URL}${path}/foto2.png" onerror="this.src='${BASE_URL}${path}/foto2.jpg'">
                         </div>
                         <div class="p-info">
-                            <span class="p-name">Camisa ${p.nome} Versão ${p.mod} - ${p.ano}</span>
-                            <span class="p-gen">${p.genero}</span>
+                            <span class="p-name">Camisa ${p.nome} ${p.tipo} - ${p.mod}</span>
+                            <span class="p-gen">${p.genero} - ${p.ano}</span>
                             <span class="price-old">${formatMoney(prices.old)}</span>
                             <span class="price-new">${formatMoney(prices.current)}</span>
                         </div>
@@ -344,8 +346,8 @@
         document.getElementById('perso-nome').value = '';
         document.getElementById('perso-numero').value = '';
         document.getElementById('detQty').innerText = detQty;
-        document.getElementById('detTitle').innerText = `Camisa ${selectedDetProduct.nome} Versão ${selectedDetProduct.mod} - ${selectedDetProduct.ano}`;
-        document.getElementById('detGen').innerText = selectedDetProduct.genero;
+        document.getElementById('detTitle').innerText = `Camisa ${selectedDetProduct.nome} ${selectedDetProduct.tipo} - ${selectedDetProduct.mod}`;
+        document.getElementById('detGen').innerText = `${selectedDetProduct.genero} - ${selectedDetProduct.ano}`;
         const prices = getPrice(selectedDetProduct);
         document.getElementById('detPriceOld').innerText = formatMoney(prices.old);
         document.getElementById('detPrice').innerText = formatMoney(prices.current);
@@ -385,7 +387,6 @@
         const basePrice = getPrice(selectedDetProduct).current;
         const finalPrice = isPerso ? basePrice + 25 : basePrice;
 
-        // Chave única inclui personalização para não agrupar camisas com nomes diferentes
         const itemKey = `${selectedDetProduct.id}-${selectedSize}-${isPerso ? pNome+pNum : 'no'}`;
         const existing = cart.find(i => i.cartKey === itemKey);
 
@@ -426,7 +427,7 @@
             <div class="cart-item">
                 <img class="cart-img" src="${BASE_URL}${path}/foto1.png" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
                 <div class="cart-info">
-                    <div style="font-weight:700; font-size:0.8rem; line-height:1.2;">${item.nome} ${item.mod} ${item.ano}</div>
+                    <div style="font-weight:700; font-size:0.8rem; line-height:1.2;">${item.nome} ${item.tipo} ${item.mod}</div>
                     ${item.perso ? `<div style="font-size:0.6rem; color:var(--primary); font-weight:800;">PERSONALIZADA: ${item.perso.nome} (${item.perso.num})</div>` : ''}
                     
                     <div class="cart-edit-row">
@@ -461,7 +462,6 @@
 
     function editSize(idx, newSize) {
         cart[idx].size = newSize;
-        // Atualizamos a cartKey para refletir o novo tamanho
         const item = cart[idx];
         item.cartKey = `${item.id}-${newSize}-${item.perso ? item.perso.nome+item.perso.num : 'no'}`;
         updateCart();
@@ -492,7 +492,7 @@
         if(cart.length === 0) return alert("Carrinho vazio!");
         let msg = "*Novo Pedido - Club da Bola*\n\n";
         cart.forEach(i => {
-            msg += `• ${i.nome} (${i.size}) x${i.qty}`;
+            msg += `• Camisa ${i.nome} ${i.tipo} (${i.size}) x${i.qty}`;
             if(i.perso) msg += ` [Perso: ${i.perso.nome}, ${i.perso.num}]`;
             msg += ` - ${formatMoney(i.preco * i.qty)}\n`;
         });
@@ -506,7 +506,7 @@
         const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
         const pNome = document.getElementById('perso-nome').value.toUpperCase();
         const pNum = document.getElementById('perso-numero').value;
-        let msg = `Olá! Gostaria de comprar a Camisa ${selectedDetProduct.nome} Versão ${selectedDetProduct.mod} (${selectedDetProduct.genero}) no tamanho ${selectedSize}.`;
+        let msg = `Olá! Gostaria de comprar a Camisa ${selectedDetProduct.nome} ${selectedDetProduct.tipo} Versão ${selectedDetProduct.mod} (${selectedDetProduct.genero}) no tamanho ${selectedSize}.`;
         if(isPerso) msg += ` Com personalização: ${pNome}, número ${pNum}.`;
         msg += ` Quantidade: ${detQty}`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
