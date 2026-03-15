@@ -4,28 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club da Bola - Catálogo Oficial</title>
+    
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/logo1.png">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #25d366; --text: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; --danger: #ff4444; --accent: #ffcc00; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background-color: var(--white); color: var(--text); padding-bottom: 100px; }
         
-        .world-cup-timer { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
+        /* ESTILO DA LOGO DE CARREGAMENTO */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        #splash-screen img {
+            width: 150px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
+        .world-cup-timer { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
         header { padding: 15px; background: var(--white); position: sticky; top: 0; z-index: 900; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-main { display: flex; align-items: center; gap: 15px; max-width: 1200px; margin: 0 auto; }
         .logo-img { height: 40px; width: auto; }
         .search-container { flex: 1; }
         .search-container input { width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; background: var(--gray); outline: none; font-family: 'Montserrat', sans-serif; }
-
         .filters-row { display: flex; gap: 8px; max-width: 1200px; margin: 10px auto 0; overflow-x: auto; padding-bottom: 5px; }
         .filters-row select { padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.75rem; background: #fff; min-width: 110px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
-
         .category-title { grid-column: 1 / -1; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px; padding-left: 10px; border-left: 4px solid var(--primary); text-transform: uppercase; }
-
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-
         .card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; position: relative; cursor: pointer; }
         .badge-new { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; }
         .img-container { position: relative; aspect-ratio: 1/1; background: #fdfdfd; overflow: hidden; }
@@ -33,57 +52,50 @@
         .card .img-secondary { opacity: 0; }
         .card:hover .img-primary { opacity: 0; transform: scale(1.1); }
         .card:hover .img-secondary { opacity: 1; transform: scale(1.1); }
-        
         .p-info { padding: 12px; text-align: center; }
         .p-name { font-weight: 700; font-size: 0.8rem; display: block; line-height: 1.2; }
         .p-gen { font-size: 0.65rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 4px; display: block; }
         .price-old { text-decoration: line-through; color: #999; font-size: 0.75rem; }
         .price-new { color: var(--primary); font-weight: 800; font-size: 1rem; display: block; margin-top: 2px; }
-
         .drawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: var(--white); z-index: 1000; transition: 0.4s; display: flex; flex-direction: column; }
         .drawer.active { right: 0; }
         @media (min-width: 768px) { .drawer { width: 400px; } }
-        
         .swiper-slide { overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff; cursor: zoom-in; }
         .swiper-slide img { transition: transform 0.3s ease; width: 100%; height: 100%; object-fit: contain; }
         .swiper-slide:hover img { transform: scale(1.5); }
-
         .size-btn { padding: 8px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
         .size-btn.selected { background: var(--text); color: white; }
-
         .personalization-box { background: var(--gray); padding: 15px; border-radius: 10px; margin-top: 15px; }
         .personalization-box label { font-size: 0.7rem; font-weight: 700; display: block; margin-bottom: 5px; }
         .personalization-box input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
-
         .qty-selector { display: flex; align-items: center; gap: 15px; background: var(--gray); padding: 8px 15px; border-radius: 8px; width: fit-content; margin-top: 10px; }
         .qty-selector button { background: none; border: none; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
-
         .shipping-progress-container { background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 15px; }
         .shipping-text { font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; }
         .progress-bg { background: #eee; height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: 0.5s; }
-
         .main-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 8px; }
         .btn-black { background: var(--text); color: white; }
         .btn-green { background: var(--primary); color: white; }
-
         .cart-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 12px; align-items: center; }
         .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #f9f9f9; }
         .cart-info { flex: 1; }
         .cart-edit-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .cart-size-select { padding: 4px; font-size: 0.7rem; border-radius: 4px; border: 1px solid #ddd; font-family: 'Montserrat'; font-weight: 700; }
-
         .faq-section { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
         .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
         .faq-question { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
         .faq-answer { display: none; padding-top: 10px; font-size: 0.8rem; color: #666; line-height: 1.5; }
-
         .cart-bar { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 12px 20px; border-radius: 30px; cursor: pointer; z-index: 950; display: none; }
         footer { background: #1a1a1a; color: white; padding: 40px 20px; text-align: center; font-size: 0.8rem; }
         footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
+
+<div id="splash-screen">
+    <img src="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/logo1.png" alt="Club da Bola">
+</div>
 
 <div class="world-cup-timer" id="wcTimer">⚽ CARREGANDO CONTAGEM...</div>
 
@@ -186,9 +198,7 @@
         <span style="font-weight:800;">MEU CARRINHO</span>
         <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); font-size:0.7rem; font-weight:700;">LIMPAR</button>
     </div>
-    
     <div id="cartItemsList" style="flex: 1; overflow-y: auto;"></div>
-
     <div style="padding: 20px; background: #fafafa; border-top: 1px solid #eee;">
         <div class="shipping-progress-container">
             <div class="shipping-text" id="shippingText">Faltam 5 peças para FRETE GRÁTIS 🔥</div>
@@ -196,7 +206,6 @@
                 <div class="progress-bar" id="progressBar"></div>
             </div>
         </div>
-
         <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#666; margin-bottom: 5px;">
             <span>Qtd. de itens:</span>
             <span id="cartQtyTotal">0</span>
@@ -238,8 +247,18 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+    // LOGICA DA TELA DE CARREGAMENTO
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 500);
+        }, 1500); // Exibe por 1.5 segundos
+    });
+
     const BASE_URL = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
     
+    // [TODO O RESTANTE DO SEU JAVASCRIPT CONTINUA EXATAMENTE IGUAL ABAIXO]
     function updateCountdown() {
         const cupDate = new Date("June 8, 2026 00:00:00").getTime();
         const now = new Date().getTime();
@@ -250,7 +269,6 @@
     updateCountdown();
     setInterval(updateCountdown, 86400000);
 
-    // DB ATUALIZADO: "tipo" alterado de casa/fora para I/II
     const db = [
         { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
         { id: 14, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
@@ -270,7 +288,6 @@
         { id: 18, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
         { id: 19, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Jogador", tipo: "II", genero: "Masculina", fotos: 2 },
         { id: 20, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 }
-        
     ];
 
     let cart = [];
@@ -292,7 +309,6 @@
     function slugify(text) { return text.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, ''); }
     function formatMoney(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
     
-    // LOGICA DE PASTA: Converte I em casa e II em fora para manter compatibilidade com as pastas do GitHub
     function getPath(p) { 
         const generoLink = p.genero.toLowerCase();
         const versaoLink = p.mod.toLowerCase();
@@ -392,25 +408,12 @@
         if(isPerso && (!pNome || !pNum)) return alert("Preencha o nome e número para personalizar!");
         const basePrice = getPrice(selectedDetProduct).current;
         const finalPrice = isPerso ? basePrice + 30 : basePrice;
-
         const itemKey = `${selectedDetProduct.id}-${selectedSize}-${isPerso ? pNome+pNum : 'no'}`;
         const existing = cart.find(i => i.cartKey === itemKey);
-
-        if(existing) {
-            existing.qty += detQty;
-        } else {
-            cart.push({ 
-                ...selectedDetProduct, 
-                cartKey: itemKey,
-                size: selectedSize, 
-                qty: detQty, 
-                preco: finalPrice,
-                perso: isPerso ? { nome: pNome, num: pNum } : null
-            });
+        if(existing) { existing.qty += detQty; } else {
+            cart.push({ ...selectedDetProduct, cartKey: itemKey, size: selectedSize, qty: detQty, preco: finalPrice, perso: isPerso ? { nome: pNome, num: pNum } : null });
         }
-        updateCart();
-        closeDrawer('drawer-details');
-        openCart();
+        updateCart(); closeDrawer('drawer-details'); openCart();
     }
 
     function updateCart() {
@@ -425,17 +428,14 @@
         document.getElementById('cartQtyTotal').innerText = count;
         document.getElementById('cartTotal').innerText = formatMoney(total);
         document.getElementById('cartBar').style.display = count > 0 ? 'block' : 'none';
-
         const container = document.getElementById('cartItemsList');
         container.innerHTML = cart.map((item, idx) => {
             const path = getPath(item);
-            return `
-            <div class="cart-item">
+            return `<div class="cart-item">
                 <img class="cart-img" src="${BASE_URL}${path}/foto1.png" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
                 <div class="cart-info">
                     <div style="font-weight:700; font-size:0.8rem; line-height:1.2;">${item.nome} ${item.tipo} ${item.mod}</div>
                     ${item.perso ? `<div style="font-size:0.6rem; color:var(--primary); font-weight:800;">PERSONALIZADA: ${item.perso.nome} (${item.perso.num})</div>` : ''}
-                    
                     <div class="cart-edit-row">
                         <select class="cart-size-select" onchange="editSize(${idx}, this.value)">
                             <option value="P" ${item.size === 'P' ? 'selected' : ''}>P</option>
@@ -444,7 +444,6 @@
                             <option value="GG" ${item.size === 'GG' ? 'selected' : ''}>GG</option>
                             <option value="XG" ${item.size === 'XG' ? 'selected' : ''}>XG</option>
                         </select>
-
                         <div style="display:flex; gap:10px; align-items:center; background:#eee; padding:3px 8px; border-radius:15px;">
                             <button onclick="editQty(${idx},-1)" style="border:none;background:none;font-weight:800;cursor:pointer;">-</button>
                             <span style="font-size:0.75rem; font-weight:700;">${item.qty}</span>
@@ -460,30 +459,12 @@
         }).join('');
     }
 
-    function editQty(idx, v) { 
-        cart[idx].qty += v; 
-        if(cart[idx].qty < 1) cart.splice(idx, 1); 
-        updateCart(); 
-    }
-
-    function editSize(idx, newSize) {
-        cart[idx].size = newSize;
-        const item = cart[idx];
-        item.cartKey = `${item.id}-${newSize}-${item.perso ? item.perso.nome+item.perso.num : 'no'}`;
-        updateCart();
-    }
-
+    function editQty(idx, v) { cart[idx].qty += v; if(cart[idx].qty < 1) cart.splice(idx, 1); updateCart(); }
+    function editSize(idx, newSize) { cart[idx].size = newSize; const item = cart[idx]; item.cartKey = `${item.id}-${newSize}-${item.perso ? item.perso.nome+item.perso.num : 'no'}`; updateCart(); }
     function clearCart() { if(confirm("Limpar carrinho?")) { cart = []; updateCart(); closeDrawer('drawer-cart'); } }
     function openCart() { document.getElementById('drawer-cart').classList.add('active'); }
     function closeDrawer(id) { document.getElementById(id).classList.remove('active'); }
-
-    function toggleFaq(el) {
-        const answer = el.nextElementSibling;
-        const span = el.querySelector('span');
-        const isOpen = answer.style.display === "block";
-        answer.style.display = isOpen ? "none" : "block";
-        span.innerText = isOpen ? "+" : "-";
-    }
+    function toggleFaq(el) { const answer = el.nextElementSibling; const span = el.querySelector('span'); const isOpen = answer.style.display === "block"; answer.style.display = isOpen ? "none" : "block"; span.innerText = isOpen ? "+" : "-"; }
 
     function applyFilters() {
         const q = slugify(document.getElementById('searchInput').value);
