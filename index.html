@@ -310,7 +310,7 @@
         const priceObj = getPrice(selectedDetProduct);
         let base = priceObj.current;
         const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
-        const final = isPerso ? base + 25 : base;
+        const final = isPerso ? base + 30 : base;
         document.getElementById('detPrice').innerText = formatMoney(final);
     }
 
@@ -391,7 +391,7 @@
         const pNum = document.getElementById('perso-numero').value;
         if(isPerso && (!pNome || !pNum)) return alert("Preencha o nome e número para personalizar!");
         const basePrice = getPrice(selectedDetProduct).current;
-        const finalPrice = isPerso ? basePrice + 25 : basePrice;
+        const finalPrice = isPerso ? basePrice + 30 : basePrice;
 
         const itemKey = `${selectedDetProduct.id}-${selectedSize}-${isPerso ? pNome+pNum : 'no'}`;
         const existing = cart.find(i => i.cartKey === itemKey);
