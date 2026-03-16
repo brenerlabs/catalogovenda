@@ -4,86 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club da Bola - Catálogo Oficial</title>
+    
+    <link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/favicon.ico">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #25d366; --text: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; --danger: #ff4444; --accent: #ffcc00; }
+        :root { --primary: #25d366; --text: #1a1a1a; --white: #ffffff; --gray: #f4f4f4; --danger: #ff4444; --accent: #f1c40f; }
         body { font-family: 'Montserrat', sans-serif; margin: 0; background-color: var(--white); color: var(--text); padding-bottom: 100px; }
         
-        .world-cup-timer { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .pulse-logo {
+            width: 120px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
 
+        .world-cup-timer { background: #000; color: #fff; text-align: center; padding: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; }
         header { padding: 15px; background: var(--white); position: sticky; top: 0; z-index: 900; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .header-main { display: flex; align-items: center; gap: 15px; max-width: 1200px; margin: 0 auto; }
         .logo-img { height: 40px; width: auto; }
         .search-container { flex: 1; }
         .search-container input { width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; background: var(--gray); outline: none; font-family: 'Montserrat', sans-serif; }
-
         .filters-row { display: flex; gap: 8px; max-width: 1200px; margin: 10px auto 0; overflow-x: auto; padding-bottom: 5px; }
         .filters-row select { padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.75rem; background: #fff; min-width: 110px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
-
         .category-title { grid-column: 1 / -1; font-weight: 800; font-size: 1.1rem; margin: 30px 0 15px; padding-left: 10px; border-left: 4px solid var(--primary); text-transform: uppercase; }
-
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-
         .card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: 0.3s; position: relative; cursor: pointer; }
-        .badge-new { position: absolute; top: 10px; left: 10px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; }
+        
+        .badge-new { 
+            position: absolute; top: 10px; left: 10px; 
+            background: var(--accent); color: #000; 
+            font-size: 0.6rem; font-weight: 800; 
+            padding: 4px 8px; border-radius: 0 0 8px 0; 
+            z-index: 10; text-transform: uppercase; 
+        }
+
         .img-container { position: relative; aspect-ratio: 1/1; background: #fdfdfd; overflow: hidden; }
         .card .img-primary, .card .img-secondary { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; top: 0; left: 0; }
         .card .img-secondary { opacity: 0; }
         .card:hover .img-primary { opacity: 0; transform: scale(1.1); }
         .card:hover .img-secondary { opacity: 1; transform: scale(1.1); }
-        
         .p-info { padding: 12px; text-align: center; }
         .p-name { font-weight: 700; font-size: 0.8rem; display: block; line-height: 1.2; }
         .p-gen { font-size: 0.65rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 4px; display: block; }
         .price-old { text-decoration: line-through; color: #999; font-size: 0.75rem; }
         .price-new { color: var(--primary); font-weight: 800; font-size: 1rem; display: block; margin-top: 2px; }
-
         .drawer { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: var(--white); z-index: 1000; transition: 0.4s; display: flex; flex-direction: column; }
         .drawer.active { right: 0; }
         @media (min-width: 768px) { .drawer { width: 400px; } }
-        
         .swiper-slide { overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff; cursor: zoom-in; }
         .swiper-slide img { transition: transform 0.3s ease; width: 100%; height: 100%; object-fit: contain; }
         .swiper-slide:hover img { transform: scale(1.5); }
 
-        .size-btn { padding: 8px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
-        .size-btn.selected { background: var(--text); color: white; }
+        .size-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 10px; }
+        .size-btn { 
+            padding: 12px 5px; border: 1.5px solid #e5e5e5; 
+            background: #fff; border-radius: 4px; 
+            cursor: pointer; font-weight: 700; font-size: 0.8rem;
+            transition: all 0.2s ease; color: #111;
+        }
+        .size-btn:hover { border-color: #111; }
+        .size-btn.selected { 
+            background: #111; color: #fff; border-color: #111;
+            transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
         .personalization-box { background: var(--gray); padding: 15px; border-radius: 10px; margin-top: 15px; }
         .personalization-box label { font-size: 0.7rem; font-weight: 700; display: block; margin-bottom: 5px; }
         .personalization-box input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
-
         .qty-selector { display: flex; align-items: center; gap: 15px; background: var(--gray); padding: 8px 15px; border-radius: 8px; width: fit-content; margin-top: 10px; }
         .qty-selector button { background: none; border: none; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
-
         .shipping-progress-container { background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 15px; }
         .shipping-text { font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between; }
         .progress-bg { background: #eee; height: 8px; border-radius: 4px; overflow: hidden; }
-        .progress-bar { background: var(--primary); height: 100%; width: 0%; transition: 0.5s; }
+        
+        .progress-bar { 
+            background: linear-gradient(90deg, #2ecc71 0%, #f1c40f 100%); 
+            height: 100%; 
+            width: 0%; 
+            transition: 0.5s; 
+        }
 
-        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 8px; }
+        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 8px; transition: 0.3s; }
+        .main-btn:active { transform: scale(0.98); }
         .btn-black { background: var(--text); color: white; }
         .btn-green { background: var(--primary); color: white; }
+        
+        .btn-success-animate { background-color: #2ecc71 !important; transition: background-color 0.3s ease; }
 
         .cart-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 12px; align-items: center; }
         .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #f9f9f9; }
         .cart-info { flex: 1; }
         .cart-edit-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .cart-size-select { padding: 4px; font-size: 0.7rem; border-radius: 4px; border: 1px solid #ddd; font-family: 'Montserrat'; font-weight: 700; }
-
         .faq-section { max-width: 1200px; margin: 40px auto; padding: 0 15px; }
         .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
         .faq-question { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
         .faq-answer { display: none; padding-top: 10px; font-size: 0.8rem; color: #666; line-height: 1.5; }
-
         .cart-bar { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: white; padding: 12px 20px; border-radius: 30px; cursor: pointer; z-index: 950; display: none; }
         footer { background: #1a1a1a; color: white; padding: 40px 20px; text-align: center; font-size: 0.8rem; }
         footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
+
+<div id="loading-screen">
+    <img src="https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/logo1.png" alt="Carregando..." class="pulse-logo">
+</div>
 
 <div class="world-cup-timer" id="wcTimer">⚽ CARREGANDO CONTAGEM...</div>
 
@@ -132,7 +176,6 @@
         
         <h2 id="detTitle" style="font-size: 1.1rem; margin: 20px 0 2px;"></h2>
         <span id="detGen" class="p-gen" style="margin-bottom: 10px;"></span>
-        
         <div id="jogadorWarning"></div> 
 
         <div style="margin-top:10px;">
@@ -140,6 +183,15 @@
             <span id="detPrice" class="price-new" style="font-size: 1.5rem;"></span>
         </div>
         <span style="font-size: 0.7rem; color: #666; display: block; margin-top: 5px;">A partir de 3 peças parcelamos em até 3x s/ juros</span>
+
+        <p style="font-weight:700; font-size:0.75rem; margin-top: 20px; margin-bottom: 0px; text-transform: uppercase;">Selecione o Tamanho:</p>
+        <div class="size-grid">
+            <button class="size-btn" onclick="selectSize(this)">P</button>
+            <button class="size-btn" onclick="selectSize(this)">M</button>
+            <button class="size-btn" onclick="selectSize(this)">G</button>
+            <button class="size-btn" onclick="selectSize(this)">GG</button>
+            <button class="size-btn" onclick="selectSize(this)">XG</button>
+        </div>
 
         <div class="personalization-box">
             <p style="font-weight:800; font-size:0.7rem; margin:0 0 10px 0;">QUER PERSONALIZAR? (+ R$ 30,00)</p>
@@ -166,16 +218,7 @@
             <button onclick="updateDetQty(1)">+</button>
         </div>
 
-        <p style="font-weight:700; font-size:0.7rem; margin-top: 15px; margin-bottom: 8px;">TAMANHO:</p>
-        <div class="size-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px;">
-            <button class="size-btn" onclick="selectSize(this)">P</button>
-            <button class="size-btn" onclick="selectSize(this)">M</button>
-            <button class="size-btn" onclick="selectSize(this)">G</button>
-            <button class="size-btn" onclick="selectSize(this)">GG</button>
-            <button class="size-btn" onclick="selectSize(this)">XG</button>
-        </div>
-
-        <button class="main-btn btn-black" onclick="addToCart()" style="margin-top: 20px;">ADICIONAR AO CARRINHO</button>
+        <button class="main-btn btn-black" onclick="addToCart()" style="margin-top: 25px;">ADICIONAR AO CARRINHO</button>
         <button class="main-btn btn-green" onclick="directBuy()">COMPRAR AGORA</button>
     </div>
 </div>
@@ -186,9 +229,7 @@
         <span style="font-weight:800;">MEU CARRINHO</span>
         <button onclick="clearCart()" style="background:none; border:none; color:var(--danger); font-size:0.7rem; font-weight:700;">LIMPAR</button>
     </div>
-    
     <div id="cartItemsList" style="flex: 1; overflow-y: auto;"></div>
-
     <div style="padding: 20px; background: #fafafa; border-top: 1px solid #eee;">
         <div class="shipping-progress-container">
             <div class="shipping-text" id="shippingText">Faltam 5 peças para FRETE GRÁTIS 🔥</div>
@@ -196,7 +237,6 @@
                 <div class="progress-bar" id="progressBar"></div>
             </div>
         </div>
-
         <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#666; margin-bottom: 5px;">
             <span>Qtd. de itens:</span>
             <span id="cartQtyTotal">0</span>
@@ -213,15 +253,23 @@
     <h3 style="text-align:center; margin-bottom:20px;">DÚVIDAS FREQUENTES</h3>
     <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">Qual o prazo de entrega? <span>+</span></div>
-        <div class="faq-answer">O prazo médio é de 15 a 25 dias úteis, pois nossos produtos são importados sob encomenda.</div>
+        <div class="faq-answer">O prazo médio é de 15 a 25 dias úteis, pois nossos produtos são importados sob encomenda diretamente dos fabricantes.</div>
     </div>
     <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">As camisas são originais? <span>+</span></div>
-        <div class="faq-answer">Trabalhamos com réplicas tailandesas 1:1 (Padrão A), a melhor qualidade do mercado, com todos os selos e tecidos idênticos aos oficiais.</div>
+        <div class="faq-answer">Trabalhamos com réplicas tailandesas 1:1 (Padrão A), a melhor qualidade disponível no mercado mundial, com tecidos e selos idênticos aos oficiais.</div>
     </div>
     <div class="faq-item">
-        <div class="faq-question" onclick="toggleFaq(this)">Posso personalizar? <span>+</span></div>
-        <div class="faq-answer">Sim! Nome e número são personalizados após a confirmação do pedido no WhatsApp. Cobramos uma taxa de R$ 30,00.</div>
+        <div class="faq-question" onclick="toggleFaq(this)">Como funciona a personalização? <span>+</span></div>
+        <div class="faq-answer">Você pode escolher nome e número personalizados. A aplicação segue a fonte oficial do clube/seleção. Cobramos uma taxa fixa de R$ 30,00.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Quais as formas de pagamento? <span>+</span></div>
+        <div class="faq-answer">Aceitamos PIX e Cartão de Crédito. Para pedidos acima de 3 peças, facilitamos o parcelamento em até 3x sem juros!</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">É seguro comprar no Club da Bola? <span>+</span></div>
+        <div class="faq-answer">Sim! Temos centenas de clientes satisfeitos em São Luís e região. Veja feedbacks reais em nosso Instagram @club.dabola.</div>
     </div>
 </div>
 
@@ -231,15 +279,23 @@
 
 <footer>
     <p>📍 São Luís - MA | Paragominas - PA<br>Siga-nos: <a href="https://instagram.com/club.dabola" target="_blank">@club.dabola</a></p>
-    <p style="opacity:0.5; font-size: 0.65rem; margin-top: 20px;">
-        © 2026 Club da Bola. Todos os direitos reservados.
-    </p>
+    <p style="opacity:0.5; font-size: 0.65rem; margin-top: 20px;">© 2026 Club da Bola. Todos os direitos reservados.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     const BASE_URL = "https://raw.githubusercontent.com/brenerlabs/catalogovenda/main/";
     
+    document.addEventListener('DOMContentLoaded', () => {
+        const loader = document.getElementById('loading-screen');
+        setTimeout(() => {
+            if(loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        }, 1500); 
+    });
+
     function updateCountdown() {
         const cupDate = new Date("June 8, 2026 00:00:00").getTime();
         const now = new Date().getTime();
@@ -248,9 +304,7 @@
         document.getElementById('wcTimer').innerText = `⚽ FALTA ${days} DIAS PARA A COPA DO MUNDO 2026`;
     }
     updateCountdown();
-    setInterval(updateCountdown, 86400000);
 
-    // DB ATUALIZADO: "tipo" alterado de casa/fora para I/II
     const db = [
         { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
         { id: 14, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
@@ -270,7 +324,6 @@
         { id: 18, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
         { id: 19, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Jogador", tipo: "II", genero: "Masculina", fotos: 2 },
         { id: 20, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 }
-        
     ];
 
     let cart = [];
@@ -282,17 +335,13 @@
     function getPrice(p) {
         const mod = p.mod.toLowerCase();
         const cat = p.cat.toLowerCase();
-        if (mod === "jogador" || cat === "selecao") {
-            return { old: 209.00, current: 189.00 };
-        } else {
-            return { old: 189.00, current: 169.00 };
-        }
+        if (mod === "jogador" || cat === "selecao") return { old: 209.00, current: 189.00 };
+        return { old: 189.00, current: 169.00 };
     }
 
     function slugify(text) { return text.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, ''); }
     function formatMoney(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
     
-    // LOGICA DE PASTA: Converte I em casa e II em fora para manter compatibilidade com as pastas do GitHub
     function getPath(p) { 
         const generoLink = p.genero.toLowerCase();
         const versaoLink = p.mod.toLowerCase();
@@ -359,7 +408,7 @@
         document.getElementById('detPrice').innerText = formatMoney(prices.current);
         const warningDiv = document.getElementById('jogadorWarning');
         const isJogador = selectedDetProduct.mod.toLowerCase().includes('jogador');
-        warningDiv.innerHTML = isJogador ? `<p style="color:red; font-size:0.7rem; font-weight:800; margin:10px 0;">⚠️ MODELAGEM JUSTA: A versão jogador possui corte atlético, recomendamos um tamanho maior que o habitual.</p>` : '';
+        warningDiv.innerHTML = isJogador ? `<p style="color:red; font-size:0.7rem; font-weight:800; margin:10px 0;">⚠️ MODELAGEM JUSTA: Sugerimos um tamanho acima na versão jogador.</p>` : '';
         const wrapper = document.getElementById('swiperWrapper');
         wrapper.innerHTML = '';
         const path = getPath(selectedDetProduct);
@@ -372,45 +421,50 @@
         setTimeout(() => { swiper = new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }, loop: true }); }, 100);
     }
 
+    function selectSize(btn) {
+        if (window.navigator.vibrate) window.navigator.vibrate(30);
+        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedSize = btn.innerText;
+    }
+
     function updateDetQty(v) {
         detQty += v;
         if(detQty < 1) detQty = 1;
         document.getElementById('detQty').innerText = detQty;
     }
 
-    function selectSize(btn) {
-        selectedSize = btn.innerText;
-        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-    }
-
     function addToCart() {
-        if(!selectedSize) return alert("Escolha o tamanho!");
+        if(!selectedSize) return alert("Por favor, selecione um tamanho!");
+        
+        if (window.navigator.vibrate) window.navigator.vibrate(50);
+
         const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
         const pNome = document.getElementById('perso-nome').value.toUpperCase();
         const pNum = document.getElementById('perso-numero').value;
-        if(isPerso && (!pNome || !pNum)) return alert("Preencha o nome e número para personalizar!");
+        if(isPerso && (!pNome || !pNum)) return alert("Preencha os dados de personalização!");
+
+        const btn = document.querySelector('.btn-black');
+        const originalText = btn.innerText;
+        btn.classList.add('btn-success-animate');
+        btn.innerText = "✓ ADICIONADO";
+
         const basePrice = getPrice(selectedDetProduct).current;
         const finalPrice = isPerso ? basePrice + 30 : basePrice;
-
         const itemKey = `${selectedDetProduct.id}-${selectedSize}-${isPerso ? pNome+pNum : 'no'}`;
         const existing = cart.find(i => i.cartKey === itemKey);
-
-        if(existing) {
-            existing.qty += detQty;
-        } else {
-            cart.push({ 
-                ...selectedDetProduct, 
-                cartKey: itemKey,
-                size: selectedSize, 
-                qty: detQty, 
-                preco: finalPrice,
-                perso: isPerso ? { nome: pNome, num: pNum } : null
-            });
+        if(existing) { existing.qty += detQty; } else {
+            cart.push({ ...selectedDetProduct, cartKey: itemKey, size: selectedSize, qty: detQty, preco: finalPrice, perso: isPerso ? { nome: pNome, num: pNum } : null });
         }
+        
         updateCart();
-        closeDrawer('drawer-details');
-        openCart();
+
+        setTimeout(() => {
+            btn.classList.remove('btn-success-animate');
+            btn.innerText = originalText;
+            closeDrawer('drawer-details');
+            openCart();
+        }, 600);
     }
 
     function updateCart() {
@@ -420,12 +474,11 @@
         const shippingText = document.getElementById('shippingText');
         const progress = Math.min((count / 5) * 100, 100);
         progressBar.style.width = progress + "%";
-        shippingText.innerHTML = count >= 5 ? `PARABÉNS! VOCÊ GANHOU FRETE GRÁTIS 🛒💨` : `Falta ${5 - count} peças para FRETE GRÁTIS 🔥`;
+        shippingText.innerHTML = count >= 5 ? `FRETE GRÁTIS APLICADO! 🛒💨` : `Faltam ${5 - count} peças para FRETE GRÁTIS 🔥`;
         document.getElementById('cartCount').innerText = count;
         document.getElementById('cartQtyTotal').innerText = count;
         document.getElementById('cartTotal').innerText = formatMoney(total);
         document.getElementById('cartBar').style.display = count > 0 ? 'block' : 'none';
-
         const container = document.getElementById('cartItemsList');
         container.innerHTML = cart.map((item, idx) => {
             const path = getPath(item);
@@ -433,9 +486,8 @@
             <div class="cart-item">
                 <img class="cart-img" src="${BASE_URL}${path}/foto1.png" onerror="this.src='${BASE_URL}${path}/foto1.jpg'">
                 <div class="cart-info">
-                    <div style="font-weight:700; font-size:0.8rem; line-height:1.2;">${item.nome} ${item.tipo} ${item.mod}</div>
+                    <div style="font-weight:700; font-size:0.8rem;">${item.nome} ${item.tipo} ${item.mod}</div>
                     ${item.perso ? `<div style="font-size:0.6rem; color:var(--primary); font-weight:800;">PERSONALIZADA: ${item.perso.nome} (${item.perso.num})</div>` : ''}
-                    
                     <div class="cart-edit-row">
                         <select class="cart-size-select" onchange="editSize(${idx}, this.value)">
                             <option value="P" ${item.size === 'P' ? 'selected' : ''}>P</option>
@@ -444,45 +496,32 @@
                             <option value="GG" ${item.size === 'GG' ? 'selected' : ''}>GG</option>
                             <option value="XG" ${item.size === 'XG' ? 'selected' : ''}>XG</option>
                         </select>
-
                         <div style="display:flex; gap:10px; align-items:center; background:#eee; padding:3px 8px; border-radius:15px;">
-                            <button onclick="editQty(${idx},-1)" style="border:none;background:none;font-weight:800;cursor:pointer;">-</button>
-                            <span style="font-size:0.75rem; font-weight:700;">${item.qty}</span>
-                            <button onclick="editQty(${idx},1)" style="border:none;background:none;font-weight:800;cursor:pointer;">+</button>
+                            <button onclick="editQty(${idx},-1)">-</button>
+                            <span style="font-size:0.75rem;">${item.qty}</span>
+                            <button onclick="editQty(${idx},1)">+</button>
                         </div>
                     </div>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-weight:800; color:var(--primary); font-size:0.85rem;">${formatMoney(item.preco * item.qty)}</div>
-                    <button onclick="editQty(${idx}, -${item.qty})" style="border:none; background:none; color:red; font-size:0.6rem; cursor:pointer; margin-top:5px;">Remover</button>
+                    <button onclick="editQty(${idx}, -${item.qty})" style="color:red; font-size:0.6rem; border:none; background:none;">Remover</button>
                 </div>
             </div>`;
         }).join('');
     }
 
-    function editQty(idx, v) { 
-        cart[idx].qty += v; 
-        if(cart[idx].qty < 1) cart.splice(idx, 1); 
-        updateCart(); 
-    }
-
-    function editSize(idx, newSize) {
-        cart[idx].size = newSize;
-        const item = cart[idx];
-        item.cartKey = `${item.id}-${newSize}-${item.perso ? item.perso.nome+item.perso.num : 'no'}`;
-        updateCart();
-    }
-
+    function editQty(idx, v) { cart[idx].qty += v; if(cart[idx].qty < 1) cart.splice(idx, 1); updateCart(); }
+    function editSize(idx, newSize) { cart[idx].size = newSize; updateCart(); }
     function clearCart() { if(confirm("Limpar carrinho?")) { cart = []; updateCart(); closeDrawer('drawer-cart'); } }
     function openCart() { document.getElementById('drawer-cart').classList.add('active'); }
     function closeDrawer(id) { document.getElementById(id).classList.remove('active'); }
 
     function toggleFaq(el) {
         const answer = el.nextElementSibling;
-        const span = el.querySelector('span');
         const isOpen = answer.style.display === "block";
         answer.style.display = isOpen ? "none" : "block";
-        span.innerText = isOpen ? "+" : "-";
+        el.querySelector('span').innerText = isOpen ? "+" : "-";
     }
 
     function applyFilters() {
@@ -503,7 +542,6 @@
             msg += ` - ${formatMoney(i.preco * i.qty)}\n`;
         });
         msg += `\n*VALOR TOTAL: ${document.getElementById('cartTotal').innerText}*`;
-        if(cart.reduce((s,i)=>s+i.qty, 0) >= 5) msg += `\n*FRETE GRÁTIS APLICADO!* 📦✅`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
@@ -512,9 +550,8 @@
         const isPerso = document.querySelector('input[name="perso-opt"]:checked').value === 'sim';
         const pNome = document.getElementById('perso-nome').value.toUpperCase();
         const pNum = document.getElementById('perso-numero').value;
-        let msg = `Olá! Gostaria de comprar a Camisa ${selectedDetProduct.nome} ${selectedDetProduct.tipo} Versão ${selectedDetProduct.mod} (${selectedDetProduct.genero}) no tamanho ${selectedSize}.`;
-        if(isPerso) msg += ` Com personalização: ${pNome}, número ${pNum}.`;
-        msg += ` Quantidade: ${detQty}`;
+        let msg = `Olá! Gostaria de comprar a Camisa ${selectedDetProduct.nome} ${selectedDetProduct.tipo} no tamanho ${selectedSize}.`;
+        if(isPerso) msg += ` Personalização: ${pNome}, número ${pNum}.`;
         window.open(`https://wa.me/5591993249580?text=${encodeURIComponent(msg)}`);
     }
 
