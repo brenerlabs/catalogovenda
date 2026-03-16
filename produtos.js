@@ -1,0 +1,20 @@
+// Arquivo: produtos.js
+const db = [
+    { id: 1, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 14, cat: "brasileirao", ano: "2026", nome: "Vasco", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
+    { id: 2, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 15, cat: "brasileirao", ano: "2026", nome: "Flamengo", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 3, cat: "brasileirao", ano: "2026", nome: "São Paulo", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 4, cat: "brasileirao", ano: "2026", nome: "Palmeiras", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 5, cat: "brasileirao", ano: "2026", nome: "Corinthians", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
+    { id: 6, cat: "europeu", ano: "2026", nome: "Real Madrid", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 7, cat: "selecao", ano: "2026", nome: "Brasil", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 8, cat: "selecao", ano: "2026", nome: "Argentina", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 9, cat: "selecao", ano: "2026", nome: "Portugal", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 10, cat: "selecao", ano: "2026", nome: "Espanha", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 11, cat: "selecao", ano: "2026", nome: "Inglaterra", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 16, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 17, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Jogador", tipo: "I", genero: "Masculina", fotos: 2 },
+    { id: 18, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Torcedor", tipo: "II", genero: "Masculina", fotos: 2 },
+    { id: 19, cat: "europeu", ano: "2026", nome: "Barcelona", mod: "Jogador", tipo: "II", genero: "Masculina", fotos: 2 },
+    { id: 20, cat: "brasileirao", ano: "2026", nome: "Cruzeiro", mod: "Torcedor", tipo: "I", genero: "Masculina", fotos: 2 }
